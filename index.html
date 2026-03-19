@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Integration Team – CRM & Business Projects Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #08bdba;
+    --teal-light: #e0f7f7;
+    --teal-mid: #4dd0ce;
+    --teal-dark: #00897b;
+    --blue: #0288d1;
+    --blue-light: #e3f2fd;
+    --blue-mid: #4fc3f7;
+    --slate: #37474f;
+    --slate-light: #607d8b;
+    --bg: #f4f7f9;
+    --white: #ffffff;
+    --card-shadow: 0 2px 12px rgba(8,189,186,0.10), 0 1px 4px rgba(0,0,0,0.06);
+    --card-shadow-hover: 0 6px 24px rgba(8,189,186,0.18), 0 2px 8px rgba(0,0,0,0.09);
+    --border: #e2ecef;
+    --text: #1c2b33;
+    --subtext: #5c7580;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #0a2a35 0%, #0d3d4a 60%, #0e5059 100%);
+    padding: 28px 36px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -80px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(8,189,186,0.18) 0%, transparent 70%);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-dot {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--teal), var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .header h1 {
+    color: var(--white);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .header-subtitle {
+    color: rgba(255,255,255,0.55);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .header-badge {
+    background: rgba(8,189,186,0.18);
+    border: 1px solid rgba(8,189,186,0.4);
+    color: var(--teal-mid);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  /* ===== SPRINT COMPLETION BANNER ===== */
+  .sprint-banner {
+    background: linear-gradient(135deg, #0d3d4a, #0e5059);
+    padding: 0 36px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    border-bottom: 1px solid rgba(8,189,186,0.15);
+  }
+  .kpi-sprint-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(8,189,186,0.25);
+    border-radius: var(--radius);
+    padding: 18px 26px;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .kpi-sprint-card.highlight {
+    background: rgba(8,189,186,0.12);
+    border-color: rgba(8,189,186,0.5);
+  }
+  .kpi-sprint-card.dimmed {
+    opacity: 0.55;
+  }
+  .kpi-sprint-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+  .kpi-sprint-number {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--teal);
+    line-height: 1;
+    font-family: 'DM Mono', monospace;
+  }
+  .kpi-sprint-title {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .kpi-sprint-minis {
+    display: flex;
+    gap: 16px;
+    margin-top: 6px;
+  }
+  .mini-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .mini-stat-val {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    font-family: 'DM Mono', monospace;
+  }
+  .mini-stat-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .kpi-sprint-number.pending {
+    font-size: 28px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 2px;
+  }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 36px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .filter-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--subtext);
+    margin-right: 4px;
+  }
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .filter-group label {
+    font-size: 12px;
+    color: var(--subtext);
+    font-weight: 500;
+  }
+  select.filter-select, input.filter-input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    min-width: 130px;
+  }
+  select.filter-select:focus, input.filter-input:focus {
+    border-color: var(--teal);
+  }
+  .filter-sep {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+  }
+  .filter-reset {
+    font-size: 12px;
+    color: var(--teal);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(8,189,186,0.3);
+    background: var(--teal-light);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .filter-reset:hover {
+    background: var(--teal);
+    color: white;
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  .dashboard-body {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    min-height: calc(100vh - 240px);
+  }
+
+  /* ===== LEFT PANEL ===== */
+  .left-panel {
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .panel-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--teal-dark);
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--teal-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 16px;
+    background: var(--teal);
+    border-radius: 2px;
+  }
+  .capacity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .capacity-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .cap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cap-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .cap-pts {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    font-family: 'DM Mono', monospace;
+  }
+  .cap-bar-bg {
+    height: 8px;
+    background: var(--teal-light);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .cap-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--blue));
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+  .cap-sub {
+    font-size: 10px;
+    color: var(--subtext);
+  }
+
+  /* ===== MAIN AREA ===== */
+  .main-area {
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    background: var(--bg);
+  }
+  .section-block {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--card-shadow);
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-pill {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .chart-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 18px;
+  }
+  .chart-card {
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .chart-card-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .chart-wrap {
+    position: relative;
+    height: 180px;
+  }
+  .chart-wrap.tall {
+    height: 220px;
+  }
+  .chart-wrap.medium {
+    height: 200px;
+  }
+
+  /* ===== KPI CARDS ===== */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .kpi-card {
+    background: linear-gradient(135deg, #f0fdfc 0%, #e3f8f7 100%);
+    border: 1px solid rgba(8,189,186,0.2);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .kpi-card:hover {
+    box-shadow: var(--card-shadow-hover);
+    transform: translateY(-1px);
+  }
+  .kpi-card.blue-tint {
+    background: linear-gradient(135deg, #e8f4fd 0%, #d3ecfa 100%);
+    border-color: rgba(2,136,209,0.2);
+  }
+  .kpi-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--subtext);
+  }
+  .kpi-number {
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--teal-dark);
+    font-family: 'DM Mono', monospace;
+    line-height: 1;
+  }
+  .kpi-card.blue-tint .kpi-number {
+    color: var(--blue);
+  }
+  .kpi-desc {
+    font-size: 11px;
+    color: var(--subtext);
+    margin-top: 2px;
+  }
+  .kpi-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(8,189,186,0.15);
+    color: var(--teal-dark);
+    width: fit-content;
+    margin-top: 2px;
+  }
+
+  /* ===== VELOCITY ===== */
+  .velocity-insight {
+    font-size: 12px;
+    color: var(--subtext);
+    font-style: italic;
+    text-align: center;
+    margin-top: 4px;
+    padding: 8px;
+    background: var(--teal-light);
+    border-radius: var(--radius-sm);
+  }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--teal-light); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--teal); }
+
+  /* ===== NO DATA ===== */
+  .no-data {
+    text-align: center;
+    padding: 20px;
+    color: var(--subtext);
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="header-logo">
+      <div class="logo-dot">🔗</div>
+      <div>
+        <h1>The Integration Team</h1>
+        <div class="header-subtitle">CRM &amp; Business Projects Dashboard</div>
+      </div>
+    </div>
+    <div class="header-badge">Sprint 4 · Active</div>
+  </div>
+</div>
+
+<!-- SPRINT COMPLETION BANNER -->
+<div class="sprint-banner">
+  <div class="kpi-sprint-card highlight">
+    <div class="kpi-sprint-label">Sprint 4 · Mar 5 – Mar 25, 2026</div>
+    <div class="kpi-sprint-number">21</div>
+    <div class="kpi-sprint-title">Story Points Completed</div>
+    <div class="kpi-sprint-minis">
+      <div class="mini-stat">
+        <div class="mini-stat-val">11</div>
+        <div class="mini-stat-label">Closed Items</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-val">52</div>
+        <div class="mini-stat-label">Total Items</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-val">48</div>
+        <div class="mini-stat-label">User Stories</div>
+      </div>
+    </div>
+  </div>
+  <div class="kpi-sprint-card">
+    <div class="kpi-sprint-label">Completion Rate</div>
+    <div class="kpi-sprint-number" style="color:#4dd0ce;">21%</div>
+    <div class="kpi-sprint-title">Items Closed / Total</div>
+    <div class="kpi-sprint-minis">
+      <div class="mini-stat">
+        <div class="mini-stat-val">4</div>
+        <div class="mini-stat-label">Bugs</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-val">2</div>
+        <div class="mini-stat-label">Bugs Closed</div>
+      </div>
+    </div>
+  </div>
+  <div class="kpi-sprint-card">
+    <div class="kpi-sprint-label">March · Sprint 4</div>
+    <div class="kpi-sprint-number" style="color:#4dd0ce;font-size:38px;">75.55%</div>
+    <div class="kpi-sprint-title">Completion Rate</div>
+    <div class="kpi-sprint-minis">
+      <div class="mini-stat">
+        <div class="mini-stat-val">34</div>
+        <div class="mini-stat-label">Completed</div>
+      </div>
+      <div class="mini-stat">
+        <div class="mini-stat-val">45</div>
+        <div class="mini-stat-label">Total Items</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <span class="filter-label">🎛 Filters</span>
+  <div class="filter-sep"></div>
+  <div class="filter-group">
+    <label>Sprint</label>
+    <select class="filter-select" id="f-sprint">
+      <option value="">All Sprints</option>
+      <option value="4" selected>Sprint 4</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Assignee</label>
+    <select class="filter-select" id="f-user">
+      <option value="">All Members</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Type</label>
+    <select class="filter-select" id="f-type">
+      <option value="">All Types</option>
+      <option value="User Story">User Story</option>
+      <option value="Bug">Bug</option>
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Status</label>
+    <select class="filter-select" id="f-status">
+      <option value="">All Statuses</option>
+    </select>
+  </div>
+  <div class="filter-sep"></div>
+  <div class="filter-group">
+    <label>Date Range</label>
+    <input type="date" class="filter-input" id="f-date-start" title="Start Date" />
+    <span style="color:var(--subtext);font-size:12px;">–</span>
+    <input type="date" class="filter-input" id="f-date-end" title="End Date" />
+  </div>
+  <div class="filter-sep"></div>
+  <div class="filter-reset" onclick="resetFilters()">↺ Reset</div>
+</div>
+
+<!-- DASHBOARD BODY -->
+<div class="dashboard-body">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="panel-title">Team Capacity</div>
+    <div class="capacity-list" id="capacity-list"></div>
+  </div>
+
+  <!-- MAIN AREA -->
+  <div class="main-area">
+
+    <!-- SECTION 1: Sprint Activity -->
+    <div class="section-block">
+      <div class="section-header">
+        <div class="section-title">
+          Sprint Activity Overview
+          <span class="section-pill">Section 1</span>
+        </div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <div class="chart-card-title">Work Items by Project</div>
+          <div class="chart-wrap"><canvas id="chart-projects"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Work Items by Type</div>
+          <div class="chart-wrap"><canvas id="chart-types"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Work Items by Status</div>
+          <div class="chart-wrap tall"><canvas id="chart-status"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Items Completed per Sprint</div>
+          <div class="chart-wrap tall"><canvas id="chart-completed"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: CRM Insights -->
+    <div class="section-block">
+      <div class="section-header">
+        <div class="section-title">
+          CRM Insights
+          <span class="section-pill">Section 2</span>
+        </div>
+      </div>
+      <div class="kpi-row" id="crm-kpis"></div>
+    </div>
+
+    <!-- SECTION 3: Sprint Velocity -->
+    <div class="section-block">
+      <div class="section-header">
+        <div class="section-title">
+          Sprint Velocity &amp; Daily Burnup
+          <span class="section-pill">Delivery</span>
+        </div>
+        <div style="font-size:12px;color:var(--subtext);font-weight:500;">
+          🗓 Sprint 4 &nbsp;·&nbsp; <strong style="color:var(--teal-dark)">Mar 5 – Mar 25, 2026</strong> &nbsp;·&nbsp; 15 working days
+        </div>
+      </div>
+
+      <!-- Velocity user filter -->
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--teal-light);border-radius:var(--radius-sm);border:1px solid rgba(8,189,186,0.2);">
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--teal-dark);">👤 Filter by Member</span>
+        <select id="velocity-user-filter" onchange="refreshVelocityCharts()" style="font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text);background:white;border:1px solid rgba(8,189,186,0.35);border-radius:var(--radius-sm);padding:6px 12px;outline:none;cursor:pointer;min-width:180px;">
+          <option value="">🏢 All Team Members</option>
+        </select>
+        <span id="velocity-member-sp" style="font-size:12px;font-weight:600;color:var(--teal-dark);margin-left:4px;"></span>
+      </div>
+
+      <!-- KPI stats row -->
+      <div id="daily-stats-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;"></div>
+
+      <!-- Daily burnup chart -->
+      <div class="chart-card" style="background:var(--bg)">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="chart-card-title">Daily SP Burnup — Sprint 4 (Mar 5 → Mar 25)</div>
+          <div id="burnup-avg-badge" style="font-size:11px;font-weight:700;padding:4px 10px;background:rgba(8,189,186,0.1);border:1px solid rgba(8,189,186,0.35);border-radius:20px;color:var(--teal-dark);white-space:nowrap;"></div>
+        </div>
+        <div class="chart-wrap tall" style="height:240px;"><canvas id="chart-daily-burnup"></canvas></div>
+      </div>
+
+      <div class="velocity-insight">
+        📈 Sprint Velocity helps forecast realistic delivery capacity for future sprints. &nbsp;·&nbsp; <span id="velocity-daily-avg"></span>
+      </div>
+    </div>
+
+  </div><!-- /main-area -->
+</div><!-- /dashboard-body -->
+
+<script>
+// ============ RAW DATA ============
+const RAW = [{"ID":103424,"Title":"Functions.DIMH | SRS | Dev testing for Submit Order DIMH","State":"Closed","Name":"Adrian Teixeira","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD"},{"ID":106776,"Title":"SRS | Discovery \u2014 Changes of partner Catalog changes appear for AccuLynx by Day D+1","State":"Dev Complete","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":108496,"Title":"SRS | Discovery \u2014 Price API response for itens With 0 price","State":"In Development","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":107292,"Title":"Functions.Customers | SRS | Validate source system and log every request (including SQL for reporting)","State":"In QA","Name":"Angel Perez","Story Points":8.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":109435,"Title":"SRS | Create New Source System for JOBFLUSS in STG","State":"Ideation","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":109436,"Title":"SRS | Create New Source System for SERVOS in STG","State":"Ideation","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":109178,"Title":"Functions.Customers | SRS | Customer Validate API | Some errors are not logged/reflected in SQL DB table","State":"Dev Complete","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other"},{"ID":105485,"Title":"Functions.Products | SRS | Create endpoint to retrieve UOMs for all products in a branch Available for all partners","State":"UAT","Name":"Angel Perez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":104996,"Title":"Functions.Quickbooks | SRS | Automatically Retry Failed Invoices during Invoice Sync","State":"Closed","Name":"Diego Flores","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":104621,"Title":"Functions.QuoteCenter (Linux) | SRS | Improve error visibility in HD Monitoring","State":"Closed","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"QuotesCenter"},{"ID":108036,"Title":"Functions.Auth | SRS | Okta endpoint throwing 500 error","State":"Closed","Name":"Diego Flores","Story Points":0.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other"},{"ID":106890,"Title":"SRS | Create a sample project using Spec-Kit driven development and demo it","State":"Active","Name":"Edgar Chavez","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Spec Kit"},{"ID":105337,"Title":"SRS & HLSG | Create Dedicated IntegrationHub Postman Workspace and Organize Active Collections","State":"In Development","Name":"Adrian Duque","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":105448,"Title":"Functions.QuoteCenter (Linux) | SRS | Test dimensional items and recommended implementation","State":"Closed","Name":"Edgar Chavez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"QuotesCenter"},{"ID":100526,"Title":"Agility | HLSG | IntHub.Services.Agilty | Remove duplicate Environment Variables","State":"Ready for Release","Name":"Diego Flores","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":106676,"Title":"SRS | API v2 Endpoints with Backward Compatibility","State":"Dev Complete","Name":"Adrian Teixeira","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":105460,"Title":"SRS | Password protect APIDOG and rollout","State":"Blocked","Name":"Adrian Teixeira","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":105443,"Title":"Discovery | SRS | Create Temporal POC","State":"Gathering Requirements","Name":"Stacy Webb","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":109322,"Title":"Documentation | SRS | Update Documentation for Pricing","State":"Ideation","Name":"Adrian Teixeira","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":101961,"Title":"API Governance | SRS&HLSG | Align SonarQube HTTP Response Rules with API Standards","State":"Dev Complete","Name":"Stacy Webb","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":107725,"Title":"Functions.THD | SRS | Create Temporal Codec Server","State":"Blocked","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD"},{"ID":107577,"Title":"API Governance | Template build with defined standards-based Constitution using Spec Kit","State":"Ideation","Name":"Edgar Chavez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Spec Kit"},{"ID":102822,"Title":"Functions.QuoteCenter (Linux) | SRS | Update PartitionKey Strategy for ATS SPSCommerce Log Tables Title","State":"Ready for Release","Name":"Diego Flores","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"QuotesCenter"},{"ID":102827,"Title":"Discovery | SRS | Revisit the Best Approach to Handle Agility and/or DB Failures for QC","State":"Closed","Name":"Diego Flores","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":107365,"Title":"Documentation | SRS | Add ProCard technical documentation","State":"In Development","Name":"Adrian Duque","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":106684,"Title":"Functions.Credits | SRS&HLSG | Enable Statement Print Due Date Flag for Bectran Customer Creations","State":"Ready for Release","Name":"Adrian Duque","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":108258,"Title":"Functions.Credits | SRS&HLSG | Additional flags for new customers' ship-to","State":"Ready for Release","Name":"Adrian Duque","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":106356,"Title":"Functions.Credit | SRS & HLSG | Bectran solution to use dedicated Agility user","State":"Ideation","Name":"Adrian Duque","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":105572,"Title":"Functions.THD | SRS | Feature Flag clean-up","State":"Ready for Release","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD"},{"ID":105611,"Title":"Functions.THD | SRS | Setup HomeDepotAuth for THD Project in Development Environment","State":"Closed","Name":"Stacy Webb","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD"},{"ID":106731,"Title":"Functions.Auth | AgilityServiceCollectionExtension | SRS | Standardize Agility SOAP Base URL Configuration","State":"Ready for QA","Name":"Vinicius Mussak","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":105901,"Title":"Functions.DemoCustomer | SRS | Upgrade to .NET 10","State":"Ready for QA","Name":"Vinicius Mussak","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":109333,"Title":"IntegrationHub | SRS| Failing to process an order from SERVICETITAN","State":"In Development","Name":"Angel Perez","Story Points":0.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other"},{"ID":106182,"Title":"Functions.Products | SRS | INTHUB-Unexpected character encountered while parsing value: {. Path '[0].Certifications","State":"Closed","Name":"","Story Points":0.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other"},{"ID":108090,"Title":"Data task | SRS | Replicate ODS Objects for SupplierPromotions Endpoint Testing","State":"Dev Complete","Name":"Vinoth Venkatesan","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":108098,"Title":"SRS | Set up GitHub organization structure, teams, and permissions for SRS Integrations","State":"Active","Name":"Stacy Webb","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"GitHub"},{"ID":108100,"Title":"SRS | Create Newman repository and configure CI pipeline for integration testing","State":"Active","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"GitHub"},{"ID":108101,"Title":"SRS | Migrate LaunchDarkly shared library and configure artifact publishing pipeline","State":"Ideation","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"GitHub"},{"ID":108102,"Title":"Functions.Auth | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"Ready for QA","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":108104,"Title":"Functions.Orders | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"In Development","Name":"Diego Flores","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":108105,"Title":"Functions.Invoices | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"Ready for Release","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":108106,"Title":"Functions.Customers | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"Ready for Release","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":108107,"Title":"Functions.Products | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"Ideation","Name":"Edgar Chavez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":108108,"Title":"APIDOGS | SRS | Update APIDOGS documentation to include V2 APIM endpoints for CRM partners","State":"Ideation","Name":"Adrian Teixeira","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":108735,"Title":"SRS | Project Setup SDK kit","State":"Ideation","Name":"Edgar Chavez","Story Points":0.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":101077,"Title":"Documentation | SRS | Order Submission V1 Flow with Visual and Animated Diagrams","State":"In Development","Name":"Adrian Teixeira","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":108289,"Title":"Discovery | SRS | Suggest SDK kit design","State":"Ideation","Name":"Edgar Chavez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":99497,"Title":"Functions.Orders | SRS | QA manteinance","State":"Closed","Name":"Jyothi Pesingi","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":99498,"Title":"Functions.DIMH | SRS | QA manteinance","State":"Closed","Name":"Sandhya Bobba","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD"},{"ID":99502,"Title":"IntegrationHub.NotificationProcessor | HLSG | QA manteinance","State":"Closed","Name":"Sandhya Bobba","Story Points":0.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"},{"ID":108376,"Title":"Spec kit | SRS DEV | Configure simplified custom DEV URL for existing Web App","State":"In Development","Name":"Sathish Kotha","Story Points":0.0,"Work Item Type":"User Story","Sprint":"4","Project":"Spec Kit"},{"ID":109307,"Title":"Admin UI | SRS | Enhance search filter in SubmitOrderLog page","State":"In Development","Name":"Angel Silva","Story Points":0.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other"}];
+
+// ============ CHART CONFIG ============
+const TEAL = '#08bdba';
+const BLUE = '#0288d1';
+const TEAL_LIGHT = '#4dd0ce';
+const BLUE_LIGHT = '#4fc3f7';
+const PALETTE = ['#08bdba','#0288d1','#26c6da','#0097a7','#4dd0ce','#80deea','#00838f','#006064'];
+const STATUS_COLORS = {
+  'Closed': '#08bdba',
+  'Ready for Release': '#26c6da',
+  'Dev Complete': '#0288d1',
+  'In Development': '#0097a7',
+  'Ready for QA': '#4fc3f7',
+  'In QA': '#00acc1',
+  'Active': '#00897b',
+  'Ideation': '#b2dfdb',
+  'Blocked': '#ef9a9a',
+  'UAT': '#80cbc4',
+  'Gathering Requirements': '#b3e5fc',
+};
+
+const chartDefaults = {
+  font: { family: "'DM Sans', sans-serif" },
+  plugins: {
+    legend: { labels: { font: { family: "'DM Sans', sans-serif", size: 11 }, color: '#5c7580' } },
+    tooltip: { titleFont: { family: "'DM Sans', sans-serif" }, bodyFont: { family: "'DM Sans', sans-serif" } }
+  }
+};
+
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+
+// ============ FILTER STATE ============
+let activeFilters = { sprint: '', user: '', type: '', status: '' };
+
+// Init filter dropdowns
+(function initFilters() {
+  const users = [...new Set(RAW.map(d => d.Name).filter(n => n && n.trim()))].sort();
+  const statuses = [...new Set(RAW.map(d => d.State))].sort();
+  const uSel = document.getElementById('f-user');
+  users.forEach(u => { const o = document.createElement('option'); o.value = u; o.textContent = u; uSel.appendChild(o); });
+  const sSel = document.getElementById('f-status');
+  statuses.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sSel.appendChild(o); });
+
+  ['f-sprint','f-user','f-type','f-status'].forEach(id => {
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+  ['f-date-start','f-date-end'].forEach(id => {
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+})();
+
+function getFiltered() {
+  let data = [...RAW];
+  const sprint = document.getElementById('f-sprint').value;
+  const user = document.getElementById('f-user').value;
+  const type = document.getElementById('f-type').value;
+  const status = document.getElementById('f-status').value;
+  if (sprint) data = data.filter(d => d.Sprint === sprint);
+  if (user) data = data.filter(d => d.Name === user);
+  if (type) data = data.filter(d => d['Work Item Type'] === type);
+  if (status) data = data.filter(d => d.State === status);
+  return data;
+}
+
+function resetFilters() {
+  ['f-sprint','f-user','f-type','f-status'].forEach(id => document.getElementById(id).value = '');
+  ['f-date-start','f-date-end'].forEach(id => document.getElementById(id).value = '');
+  applyFilters();
+}
+
+// ============ CHART INSTANCES ============
+let charts = {};
+
+function destroyChart(id) {
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+// ============ RENDER FUNCTIONS ============
+function renderCapacity(data) {
+  const spByPerson = {};
+  const countByPerson = {};
+  data.filter(d => d.Name && d.Name.trim()).forEach(d => {
+    spByPerson[d.Name] = (spByPerson[d.Name] || 0) + (d['Story Points'] || 0);
+    countByPerson[d.Name] = (countByPerson[d.Name] || 0) + 1;
+  });
+  const sorted = Object.entries(spByPerson).sort((a, b) => b[1] - a[1]);
+  const maxSP = Math.max(...sorted.map(e => e[1]), 1);
+  const container = document.getElementById('capacity-list');
+  container.innerHTML = '';
+  sorted.forEach(([name, sp]) => {
+    const pct = Math.round((sp / maxSP) * 100);
+    const div = document.createElement('div');
+    div.className = 'capacity-item';
+    const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    div.innerHTML = `
+      <div class="cap-header">
+        <span class="cap-name">${name}</span>
+        <span class="cap-pts">${sp} pts</span>
+      </div>
+      <div class="cap-bar-bg">
+        <div class="cap-bar-fill" style="width:${pct}%"></div>
+      </div>
+      <div class="cap-sub">${countByPerson[name]} item${countByPerson[name]!==1?'s':''} assigned</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function renderProjectsChart(data) {
+  destroyChart('projects');
+  const counts = {};
+  data.forEach(d => { counts[d.Project] = (counts[d.Project] || 0) + 1; });
+  const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+  const ctx = document.getElementById('chart-projects').getContext('2d');
+  charts.projects = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: sorted.map(e => e[0]),
+      datasets: [{ label: 'Work Items', data: sorted.map(e => e[1]),
+        backgroundColor: sorted.map((_, i) => PALETTE[i % PALETTE.length]),
+        borderRadius: 6, borderSkipped: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, ...chartDefaults.plugins },
+      scales: {
+        y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 10 }, color: '#5c7580', stepSize: 1 } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#5c7580' } }
+      }
+    }
+  });
+}
+
+function renderTypesChart(data) {
+  destroyChart('types');
+  const stories = data.filter(d => d['Work Item Type'] === 'User Story').length;
+  const bugs = data.filter(d => d['Work Item Type'] === 'Bug').length;
+  const ctx = document.getElementById('chart-types').getContext('2d');
+  charts.types = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['User Stories', 'Bugs'],
+      datasets: [{ data: [stories, bugs], backgroundColor: [TEAL, '#ef9a9a'],
+        borderWidth: 3, borderColor: '#fff', hoverOffset: 8 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '62%',
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: "'DM Sans', sans-serif", size: 11 }, color: '#5c7580', padding: 12 } },
+        tooltip: { titleFont: { family: "'DM Sans', sans-serif" }, bodyFont: { family: "'DM Sans', sans-serif" } }
+      }
+    }
+  });
+}
+
+function renderStatusChart(data) {
+  destroyChart('status');
+  const counts = {};
+  data.forEach(d => { counts[d.State] = (counts[d.State] || 0) + 1; });
+  const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+  const ctx = document.getElementById('chart-status').getContext('2d');
+  charts.status = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: sorted.map(e => e[0]),
+      datasets: [{ label: 'Items', data: sorted.map(e => e[1]),
+        backgroundColor: sorted.map(e => STATUS_COLORS[e[0]] || TEAL),
+        borderRadius: 4, borderSkipped: false }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 10 }, color: '#5c7580', stepSize: 1 } },
+        y: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#5c7580' } }
+      }
+    }
+  });
+}
+
+function renderCompletedChart(data) {
+  destroyChart('completed');
+  const completedStates = ['Closed', 'Ready for Release', 'Dev Complete'];
+  const sprintGroups = {};
+  data.forEach(d => {
+    const sp = d.Sprint;
+    if (!sprintGroups[sp]) sprintGroups[sp] = { total: 0, completed: 0 };
+    sprintGroups[sp].total++;
+    if (completedStates.includes(d.State)) sprintGroups[sp].completed++;
+  });
+  const sprints = Object.keys(sprintGroups).sort();
+  const ctx = document.getElementById('chart-completed').getContext('2d');
+  charts.completed = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: sprints.map(s => `Sprint ${s}`),
+      datasets: [
+        { label: 'Total Items', data: sprints.map(s => sprintGroups[s].total),
+          backgroundColor: 'rgba(79,195,247,0.75)', borderRadius: 6, borderSkipped: false },
+        { label: 'Completed', data: sprints.map(s => sprintGroups[s].completed),
+          backgroundColor: 'rgba(8,189,186,0.9)', borderRadius: 6, borderSkipped: false }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, color: '#5c7580' } },
+        datalabels: false,
+        tooltip: { titleFont: { family: "'DM Sans', sans-serif" }, bodyFont: { family: "'DM Sans', sans-serif" } }
+      },
+      scales: {
+        y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 10 }, color: '#5c7580', stepSize: 1 },
+          title: { display: true, text: 'Items', font: { size: 10 }, color: '#5c7580' } },
+        x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#5c7580' } }
+      }
+    }
+  });
+}
+
+function renderCRMKPIs(data) {
+  const crmItems = data.filter(d => d.Title.toUpperCase().includes('CRM'));
+  const totalCRM = crmItems.length;
+  const crmBugs = crmItems.filter(d => d['Work Item Type'] === 'Bug').length;
+  const closedCRM = crmItems.filter(d => d.State === 'Closed').length;
+  const crmClosureRate = totalCRM > 0 ? Math.round((closedCRM / totalCRM) * 100) : 0;
+
+  const kpis = [
+    { label: 'Total CRM Work', value: totalCRM, desc: 'Items tagged CRM', cls: '' },
+    { label: 'CRM Bugs', value: crmBugs, desc: 'Bug type + CRM tag', cls: 'blue-tint' },
+    { label: 'Avg Resolution', value: 'N/A', desc: 'Requires closed date data', cls: '' },
+    { label: 'CRM Closure Rate', value: `${crmClosureRate}%`, desc: `${closedCRM} of ${totalCRM} closed`, cls: 'blue-tint' },
+  ];
+
+  const container = document.getElementById('crm-kpis');
+  container.innerHTML = '';
+  kpis.forEach(k => {
+    const div = document.createElement('div');
+    div.className = `kpi-card ${k.cls}`;
+    div.innerHTML = `
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-number">${k.value}</div>
+      <div class="kpi-desc">${k.desc}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// ============ VELOCITY USER FILTER INIT ============
+(function initVelocityFilter() {
+  const sel = document.getElementById('velocity-user-filter');
+  const users = [...new Set(RAW.map(d => d.Name).filter(n => n && n.trim()))].sort();
+  users.forEach(u => {
+    const o = document.createElement('option');
+    o.value = u; o.textContent = u;
+    sel.appendChild(o);
+  });
+})();
+
+function getVelocityUser() {
+  return document.getElementById('velocity-user-filter').value;
+}
+
+function refreshVelocityCharts() {
+  const data = getFiltered();
+  renderDailyBurnup(data);
+}
+
+function renderVelocity(data) {
+  destroyChart('velocity');
+  const vUser = getVelocityUser();
+  const filtered = vUser ? data.filter(d => d.Name === vUser) : data;
+
+  const sprintVelocity = {};
+  filtered.filter(d => d.State === 'Closed' && d['Work Item Type'] === 'User Story').forEach(d => {
+    sprintVelocity[d.Sprint] = (sprintVelocity[d.Sprint] || 0) + (d['Story Points'] || 0);
+  });
+
+  const allSprints = [...new Set(RAW.map(d => d.Sprint))].sort();
+  const velocities = allSprints.map(s => sprintVelocity[s] || 0);
+  const avg = velocities.reduce((a,b)=>a+b, 0) / (velocities.length || 1);
+
+  const badge = document.getElementById('velocity-avg-badge');
+  if (badge) badge.textContent = `Avg Velocity: ${avg.toFixed(1)} SP / sprint`;
+
+  const memberSpEl = document.getElementById('velocity-member-sp');
+  if (memberSpEl && vUser) {
+    const mc = filtered.filter(d => d.State === 'Closed').reduce((s,d) => s+(d['Story Points']||0),0);
+    const mt = filtered.reduce((s,d) => s+(d['Story Points']||0),0);
+    memberSpEl.textContent = `${mc} SP closed · ${mt} SP assigned`;
+  } else if (memberSpEl) { memberSpEl.textContent = ''; }
+
+  const dataLabelPlugin = {
+    id: 'velocityLabels',
+    afterDatasetsDraw(chart) {
+      const { ctx, data: cd, scales: { x, y } } = chart;
+      ctx.save();
+      ctx.font = "bold 14px 'DM Mono', monospace";
+      ctx.textAlign = 'center';
+      cd.datasets[0].data.forEach((val, i) => {
+        if (!val) return;
+        ctx.fillStyle = val >= avg ? '#00897b' : '#90a4ae';
+        ctx.fillText(val + ' SP', x.getPixelForValue(i), y.getPixelForValue(val) - 12);
+      });
+      ctx.restore();
+    }
+  };
+
+  const ctx = document.getElementById('chart-velocity').getContext('2d');
+  charts.velocity = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: allSprints.map(s => `Sprint ${s}`),
+      datasets: [
+        { label: vUser ? `${vUser} — Velocity` : 'Team Velocity (SP)',
+          data: velocities,
+          backgroundColor: velocities.map(v => v >= avg ? 'rgba(8,189,186,0.82)' : 'rgba(8,189,186,0.38)'),
+          borderColor: velocities.map(v => v >= avg ? '#08bdba' : '#80cbc4'),
+          borderWidth: 2, borderRadius: 10, borderSkipped: false, order: 2 },
+        { label: `Avg: ${avg.toFixed(1)} SP`,
+          data: allSprints.map(() => avg),
+          type: 'line', borderColor: '#90caf9', borderDash: [7,4],
+          borderWidth: 2.5, pointRadius: 0, fill: false, order: 1 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, color: '#5c7580', padding: 16 } },
+        tooltip: {
+          callbacks: {
+            label: (c) => {
+              if (c.datasetIndex === 0) {
+                const sp = c.raw;
+                const closed = filtered.filter(d => d.Sprint === allSprints[c.dataIndex] && d.State === 'Closed' && d['Work Item Type'] === 'User Story').length;
+                const diff = sp - avg;
+                return [`Velocity: ${sp} SP`, `${closed} closed stories`, diff >= 0 ? `▲ ${diff.toFixed(1)} above avg` : `▼ ${Math.abs(diff).toFixed(1)} below avg`];
+              }
+              return `Avg: ${c.raw.toFixed(1)} SP/sprint`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 10 }, color: '#5c7580' },
+          title: { display: true, text: 'Story Points Completed', font: { size: 11 }, color: '#5c7580' }, beginAtZero: true },
+        x: { grid: { display: false }, ticks: { font: { size: 12, weight: '600' }, color: '#37474f' } }
+      }
+    },
+    plugins: [dataLabelPlugin]
+  });
+}
+
+// ============ SPRINT DATE CONFIG ============
+const SPRINT_CONFIG = {
+  '4': { start: '2026-03-05', end: '2026-03-25', label: 'Sprint 4' }
+};
+
+function getWorkingDays(startStr, endStr) {
+  const days = [];
+  const start = new Date(startStr + 'T00:00:00');
+  const end   = new Date(endStr   + 'T00:00:00');
+  const cur = new Date(start);
+  while (cur <= end) {
+    const dow = cur.getDay();
+    if (dow !== 0 && dow !== 6) days.push(new Date(cur));
+    cur.setDate(cur.getDate() + 1);
+  }
+  return days;
+}
+
+function formatDay(d) { return `${d.getMonth()+1}/${d.getDate()}`; }
+
+function renderDailyBurnup(data) {
+  destroyChart('daily-burnup');
+  const vUser = getVelocityUser();
+  const filtered = vUser ? data.filter(d => d.Name === vUser) : data;
+
+  const sprint4 = SPRINT_CONFIG['4'];
+  const workingDays = getWorkingDays(sprint4.start, sprint4.end);
+  const totalDays = workingDays.length;
+  const today = new Date('2026-03-13T00:00:00');
+
+  const closedSP = filtered.filter(d => d.Sprint === '4' && d.State === 'Closed').reduce((s,d) => s+(d['Story Points']||0), 0);
+  const totalSP  = filtered.filter(d => d.Sprint === '4').reduce((s,d) => s+(d['Story Points']||0), 0);
+  const elapsedDays = workingDays.filter(d => d <= today).length;
+  const spPerDay = elapsedDays > 0 ? closedSP / elapsedDays : 0;
+
+  // Cumulative actual (ramp to closedSP over elapsed days)
+  const actualData = workingDays.map((d, i) => {
+    if (d > today) return null;
+    if (i === elapsedDays - 1) return closedSP;
+    return Math.round((closedSP / elapsedDays) * (i + 1) * 10) / 10;
+  });
+  // Ideal burnup: 0 → totalSP over all days
+  const idealData = workingDays.map((_, i) =>
+    totalDays > 1 ? Math.round((totalSP / (totalDays - 1)) * i * 10) / 10 : 0
+  );
+  // Avg SP/day projected line across ALL days (shows pace extrapolated to sprint end)
+  const avgPaceLine = workingDays.map((_, i) =>
+    Math.round(spPerDay * (i + 1) * 10) / 10
+  );
+  // Daily bars for elapsed days
+  const dailyActual = workingDays.map((d) =>
+    d <= today ? Math.round(spPerDay * 10) / 10 : null
+  );
+
+  // KPI stat row
+  const statsRow = document.getElementById('daily-stats-row');
+  statsRow.innerHTML = '';
+  const daysLeft = totalDays - elapsedDays;
+  const spRemaining = Math.max(0, totalSP - closedSP);
+  const projectedTotal = Math.round(spPerDay * totalDays * 10) / 10;
+  [
+    { label: 'Days Elapsed',   val: elapsedDays,                          sub: `of ${totalDays} working days`, cls: '' },
+    { label: 'Days Remaining', val: daysLeft,                             sub: 'until Mar 25', cls: '' },
+    { label: 'Avg SP / Day',   val: spPerDay > 0 ? spPerDay.toFixed(2) : '—', sub: `${closedSP} SP ÷ ${elapsedDays} days`, cls: '' },
+    { label: 'SP Remaining',   val: spRemaining,                          sub: `projected finish: ${projectedTotal} SP`, cls: 'blue-tint' },
+  ].forEach(k => {
+    const el = document.createElement('div');
+    el.className = `kpi-card ${k.cls}`;
+    el.style.cssText = 'padding:12px 14px;';
+    el.innerHTML = `<div class="kpi-label">${k.label}</div><div class="kpi-number" style="font-size:26px;">${k.val}</div><div class="kpi-desc">${k.sub}</div>`;
+    statsRow.appendChild(el);
+  });
+
+  const burnupBadge = document.getElementById('burnup-avg-badge');
+  if (burnupBadge) burnupBadge.textContent = `Average Velocity: ${spPerDay > 0 ? spPerDay.toFixed(2) : '—'} SP / day`;
+
+  const ins = document.getElementById('velocity-daily-avg');
+  if (ins) {
+    const who = vUser || 'Team';
+    ins.innerHTML = `<strong>${who}</strong>: ${closedSP} SP closed · ${spPerDay > 0 ? spPerDay.toFixed(2) : '—'} SP/day avg · ${daysLeft} days left`;
+  }
+
+  const ctx = document.getElementById('chart-daily-burnup').getContext('2d');
+  charts['daily-burnup'] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: workingDays.map(formatDay),
+      datasets: [
+        { label: 'Daily SP Earned',
+          data: dailyActual,
+          backgroundColor: workingDays.map(d => d <= today ? 'rgba(8,189,186,0.4)' : 'transparent'),
+          borderColor:      workingDays.map(d => d <= today ? '#08bdba' : 'transparent'),
+          borderWidth: 1, borderRadius: 4, borderSkipped: false, yAxisID: 'y', order: 4 },
+        { label: 'Cumulative SP (Actual)',
+          data: actualData,
+          type: 'line', borderColor: '#08bdba', backgroundColor: 'rgba(8,189,186,0.07)',
+          borderWidth: 2.5, tension: 0.35, fill: true, spanGaps: false,
+          pointRadius: workingDays.map(d => d <= today ? 4 : 0),
+          pointBackgroundColor: '#08bdba', pointBorderColor: '#fff', pointBorderWidth: 2,
+          yAxisID: 'y', order: 2 },
+        { label: `Average Velocity (${spPerDay > 0 ? spPerDay.toFixed(2) : '—'} SP/day)`,
+          data: avgPaceLine,
+          type: 'line', borderColor: '#00897b', borderDash: [4,3],
+          borderWidth: 2.2, pointRadius: 0, fill: false, yAxisID: 'y', order: 1 },
+        { label: 'Ideal Burnup',
+          data: idealData,
+          type: 'line', borderColor: '#90caf9', borderDash: [6,5],
+          borderWidth: 1.8, pointRadius: 0, fill: false, yAxisID: 'y', order: 3 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 11 }, color: '#5c7580', padding: 14, usePointStyle: true, pointStyle: 'circle' } },
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: {
+            title: (items) => workingDays[items[0].dataIndex].toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+            label: (c) => c.raw == null ? null : `${c.dataset.label}: ${c.raw} SP`
+          }
+        }
+      },
+      scales: {
+        y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 10 }, color: '#5c7580' },
+          title: { display: true, text: 'Story Points', font: { size: 10 }, color: '#5c7580' }, beginAtZero: true },
+        x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: {
+            font: { size: 9 }, maxRotation: 45,
+            color: (ctx2) => {
+              const d = workingDays[ctx2.index];
+              if (!d) return '#5c7580';
+              if (d.toDateString() === today.toDateString()) return '#08bdba';
+              return d <= today ? '#37474f' : '#b0bec5';
+            }
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'todayLine',
+      afterDraw(chart) {
+        const idx = workingDays.findIndex(d => d.toDateString() === today.toDateString());
+        if (idx < 0) return;
+        const { ctx: c, scales: { x, y } } = chart;
+        const xPos = x.getPixelForValue(idx);
+        c.save();
+        c.beginPath(); c.moveTo(xPos, y.top); c.lineTo(xPos, y.bottom);
+        c.strokeStyle = 'rgba(8,189,186,0.55)'; c.lineWidth = 1.5; c.setLineDash([4,3]); c.stroke();
+        c.setLineDash([]);
+        c.font = "bold 10px 'DM Sans', sans-serif"; c.fillStyle = '#08bdba'; c.textAlign = 'center';
+        c.fillText('Today', xPos, y.top - 5);
+        c.restore();
+      }
+    }]
+  });
+}
+
+function applyFilters() {
+  const data = getFiltered();
+  renderCapacity(data);
+  renderProjectsChart(data);
+  renderTypesChart(data);
+  renderStatusChart(data);
+  renderCompletedChart(data);
+  renderCRMKPIs(data);
+  renderDailyBurnup(data);
+}
+
+// Initial render
+applyFilters();
+</script>
+</body>
+</html>
