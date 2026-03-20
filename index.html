@@ -264,6 +264,109 @@
     color: var(--subtext);
   }
 
+  /* ===== CRM INSIGHTS ===== */
+  .crm-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .crm-kpi-card {
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    transition: box-shadow 0.2s;
+  }
+  .crm-kpi-card:hover { box-shadow: var(--card-shadow-hover); }
+  .crm-kpi-card.accent-teal   { background: linear-gradient(135deg, #e0f7f7, #b2ebf2); border-color: rgba(8,189,186,0.3); }
+  .crm-kpi-card.accent-blue   { background: linear-gradient(135deg, #e0f4f7, #b2e0eb); border-color: rgba(0,151,167,0.3); }
+  .crm-kpi-card.accent-orange { background: linear-gradient(135deg, #e0f2f1, #a7ded9); border-color: rgba(0,121,107,0.25); }
+  .crm-kpi-card.accent-purple { background: linear-gradient(135deg, #e8f4f5, #bde0e5); border-color: rgba(0,131,143,0.25); }
+  .crm-kpi-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.7px; color:#37474f; }
+  .crm-kpi-number      { font-size:36px; font-weight:700; font-family:'DM Mono',monospace; line-height:1.1; color:var(--text); }
+  .crm-kpi-number.teal   { color: #00695c; }
+  .crm-kpi-number.blue   { color: #00838f; }
+  .crm-kpi-number.orange { color: #00796b; }
+  .crm-kpi-number.purple { color: #006064; }
+  .crm-kpi-sub  { font-size:11px; color:var(--subtext); margin-top:1px; }
+  .crm-kpi-bar-bg { height:4px; background:rgba(0,0,0,0.07); border-radius:2px; margin-top:6px; overflow:hidden; }
+  .crm-kpi-bar-fill { height:100%; border-radius:2px; background: linear-gradient(90deg, var(--teal), var(--blue)); }
+
+  .crm-bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 4px;
+  }
+  .crm-panel {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .crm-panel-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .crm-bug-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #e0f2f1;
+    color: #00695c;
+    border: 1px solid rgba(0,105,92,0.2);
+  }
+  .crm-bug-list { display: flex; flex-direction: column; gap: 6px; }
+  .crm-bug-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    border: 1px solid var(--border);
+    font-size: 11px;
+  }
+  .crm-bug-state {
+    flex-shrink: 0;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+  }
+  .crm-bug-state.open   { background: #e0f4f7; color: #006064; }
+  .crm-bug-state.closed { background: #e0f7f7; color: var(--teal-dark); }
+  .crm-bug-state.in-dev { background: #b2ebf2; color: #00838f; }
+  .crm-bug-title { flex: 1; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .crm-bug-sp { flex-shrink:0; font-size:10px; font-weight:700; color:var(--subtext); font-family:'DM Mono',monospace; }
+
+  .crm-sp-content { display: flex; flex-direction: column; gap: 7px; }
+  .crm-sp-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .crm-sp-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+  .crm-sp-name { flex:1; color:var(--text); font-weight:500; }
+  .crm-sp-val { font-family:'DM Mono',monospace; font-size:12px; font-weight:700; color:var(--teal-dark); }
+
   /* ===== PROJECT SLICER ===== */
   .project-slicer {
     background: var(--white);
@@ -656,9 +759,9 @@
     <!-- Completion Rate -->
     <div class="ss-card">
       <div class="ss-label">Sprint Completion Rate</div>
-      <div class="ss-number">49.3%</div>
+      <div class="ss-number">51.4%</div>
       <div class="ss-sub-row">
-        <div class="ss-bar-bg"><div class="ss-bar-fill" style="width:49.3%"></div></div>
+        <div class="ss-bar-bg"><div class="ss-bar-fill" style="width:51.4%"></div></div>
       </div>
       <div class="ss-hint">Sprint 4</div>
     </div>
@@ -666,27 +769,27 @@
     <!-- Story Points -->
     <div class="ss-card">
       <div class="ss-label">Story Points Completed</div>
-      <div class="ss-number">81<span class="ss-denom">/180</span></div>
+      <div class="ss-number">86<span class="ss-denom">/180</span></div>
       <div class="ss-sub-row">
-        <div class="ss-bar-bg"><div class="ss-bar-fill" style="width:45%"></div></div>
+        <div class="ss-bar-bg"><div class="ss-bar-fill" style="width:47.8%"></div></div>
       </div>
-      <div class="ss-hint">99 pts remaining</div>
+      <div class="ss-hint">94 pts remaining</div>
     </div>
 
     <!-- Bugs -->
     <div class="ss-card">
       <div class="ss-label">Active Bugs</div>
-      <div class="ss-number blue-bold">7</div>
-      <div class="ss-delta neutral">+7 bugs this sprint</div>
-      <div class="ss-hint">9 total · 2 closed</div>
+      <div class="ss-number blue-bold">14</div>
+      <div class="ss-delta neutral">+14 bugs this sprint</div>
+      <div class="ss-hint">14 total · 0 closed</div>
     </div>
 
     <!-- Sprint Velocity -->
     <div class="ss-card">
       <div class="ss-label">Avg Daily Velocity</div>
-      <div class="ss-number">5.4</div>
+      <div class="ss-number">5.73</div>
       <div class="ss-hint">SP / day &nbsp;·&nbsp; Sprint 4</div>
-      <div class="ss-delta positive">▲ 81 SP across 15 days</div>
+      <div class="ss-delta positive">▲ 86 SP across 15 days</div>
     </div>
 
   </div>
@@ -803,8 +906,32 @@
           CRM Insights
           <span class="section-pill">Section 2</span>
         </div>
+        <div style="font-size:11px;color:var(--subtext);">Based on items tagged <strong>CRM Integration</strong></div>
       </div>
-      <div class="kpi-row" id="crm-kpis"></div>
+
+      <!-- Top KPI row -->
+      <div class="crm-kpi-row" id="crm-kpis"></div>
+
+      <!-- Bottom: Bug list + SP breakdown side by side -->
+      <div class="crm-bottom-grid">
+
+        <!-- CRM Bug list -->
+        <div class="crm-panel">
+          <div class="crm-panel-title">
+            <span>🐛 CRM Bugs</span>
+            <span id="crm-bug-count-badge" class="crm-bug-badge"></span>
+          </div>
+          <div id="crm-bug-list" class="crm-bug-list"></div>
+        </div>
+
+        <!-- SP breakdown -->
+        <div class="crm-panel">
+          <div class="crm-panel-title">📊 Story Points Breakdown</div>
+          <div id="crm-sp-breakdown" class="crm-sp-content"></div>
+          <div style="height:160px;margin-top:8px;"><canvas id="chart-crm-sp"></canvas></div>
+        </div>
+
+      </div>
     </div>
 
     <!-- SECTION 3: Sprint Velocity -->
@@ -841,7 +968,7 @@
       </div>
 
       <div class="velocity-insight">
-        📈 Sprint Velocity helps forecast realistic delivery capacity for future sprints. &nbsp;·&nbsp; <span id="velocity-daily-avg">Sprint 4: <strong>81 SP</strong> completed across <strong>35 closed items</strong></span>
+        📈 Sprint Velocity helps forecast realistic delivery capacity for future sprints. &nbsp;·&nbsp; <span id="velocity-daily-avg">Sprint 4: <strong>86 SP</strong> completed across <strong>37 closed items</strong></span>
       </div>
     </div>
 
@@ -850,7 +977,7 @@
 
 <script>
 // ============ RAW DATA ============
-const RAW = [{"ID":109333,"Title":"IntegrationHub | SRS| Failing to process an order from SERVICETITAN","State":"Closed","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; Heritage; UAT testing"},{"ID":109584,"Title":"IntegrationHub | SRS | Transaction id affecting pricing in QA","State":"Closed","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"CRM Integration; Heritage; UAT testing"},{"ID":109744,"Title":"IntegrationHub | SRS | Invalid Custumer Invalid JSON","State":"New","Name":"Angel Perez","Story Points":3.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing"},{"ID":109796,"Title":"IntegrationHub | SRS | Itens with error to bring pricing/inventory data","State":"New","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing"},{"ID":109982,"Title":"IntegrationHub | SRS | Unicode Replacement creating errors","State":"New","Name":"Angel Perez","Story Points":0.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing"},{"ID":110002,"Title":"SRS | STG | Active Branch Products timeouts","State":"Active","Name":"Vinicius Mussak","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing"},{"ID":110004,"Title":"IntegrationHub | SRS | Error when setting up orders","State":"New","Name":"Angel Perez","Story Points":3.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing"},{"ID":110013,"Title":"IntegrationHub | SRS | Item failure ServiceTitan","State":"New","Name":"Angel Perez","Story Points":0.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing"},{"ID":103424,"Title":"Functions.DIMH | SRS | Dev testing for Submit Order DIMH","State":"Closed","Name":"Adrian Teixeira","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD","Tags":"Building Products; Dev Testing"},{"ID":106776,"Title":"SRS | Discovery \u2014 Changes of partner Catalog changes appear for AccuLynx by Day D+1","State":"Closed","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration"},{"ID":108496,"Title":"SRS | Discovery \u2014 Price API response for itens With 0 price","State":"Closed","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration"},{"ID":109558,"Title":"SRS | Support \u2014 Ironhouse Roofing Pricing V2 issues","State":"In Development","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration"},{"ID":110016,"Title":"SRS | Integration hub \u2014 Webhook Configuration Openbooq","State":"Ideation","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration"},{"ID":107292,"Title":"Functions.Customers | SRS | Validate source system and log every request (including SQL for reporting)","State":"Ready for QA","Name":"Angel Perez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration"},{"ID":109178,"Title":"Functions.Customers | SRS | Customer Validate API | Some errors are not logged/reflected in SQL DB table","State":"Closed","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; Heritage"},{"ID":109536,"Title":"Functions.Customers | SRS Stage | Customer Validate API is giving 500 internal server error","State":"Closed","Name":"Angel Perez","Story Points":0.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"Building Products"},{"ID":109435,"Title":"SRS | Create New Source System for JOBFLUSS in STG","State":"Closed","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration"},{"ID":109436,"Title":"SRS | Create New Source System for SERVOS in STG","State":"Closed","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration"},{"ID":109609,"Title":"SRS | Create New Source System for JOHNSON RESTORATION in STG","State":"Closed","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration"},{"ID":109611,"Title":"SRS | Create New Source System for STELLAR in STG","State":"Closed","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration"},{"ID":109995,"Title":"SRS | Create New Source System for SKQUALITYR in STG","State":"Closed","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration"},{"ID":105485,"Title":"Functions.Products | SRS | Create endpoint to retrieve UOMs for all products in a branch Available for all partners","State":"UAT","Name":"Angel Perez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration; UAT testing"},{"ID":104996,"Title":"Functions.Quickbooks | SRS | Automatically Retry Failed Invoices during Invoice Sync","State":"Closed","Name":"Diego Flores","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/10/2026; Dev Testing"},{"ID":104621,"Title":"Functions.QuoteCenter (Linux) | SRS | Improve error visibility in HD Monitoring","State":"Closed","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"Bug","Sprint":"4","Project":"QuotesCenter","Tags":"Building Products; Deployed 3/10/2026; Dev Testing"},{"ID":108036,"Title":"Functions.Auth | SRS | Okta endpoint throwing 500 error","State":"Closed","Name":"Diego Flores","Story Points":0.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/10/2026"},{"ID":106890,"Title":"SRS | Create a sample project using Spec-Kit driven development and demo it","State":"Closed","Name":"Edgar Chavez","Story Points":8.0,"Work Item Type":"User Story","Sprint":"4","Project":"Spec Kit","Tags":"Building Products; Dev Testing"},{"ID":105337,"Title":"SRS & HLSG | Create Dedicated IntegrationHub Postman Workspace and Organize Active Collections","State":"In Development","Name":"Adrian Duque","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing; Heritage"},{"ID":105448,"Title":"Functions.QuoteCenter (Linux) | SRS | Test dimensional items and recommended implementation","State":"Closed","Name":"Edgar Chavez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"QuotesCenter","Tags":"Building Products; UAT testing"},{"ID":100526,"Title":"Agility | HLSG | IntHub.Services.Agilty | Remove duplicate Environment Variables","State":"Ready for Release","Name":"Diego Flores","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Heritage"},{"ID":106676,"Title":"SRS | API v2 Endpoints with Backward Compatibility","State":"Dev Complete","Name":"Adrian Teixeira","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products"},{"ID":105460,"Title":"SRS | Password protect APIDOG and rollout","State":"Blocked","Name":"Adrian Teixeira","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; UAT testing"},{"ID":105443,"Title":"Discovery | SRS | Create Temporal POC","State":"Gathering Requirements","Name":"Stacy Webb","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing"},{"ID":109322,"Title":"Documentation | SRS | Update Documentation for Pricing","State":"Ideation","Name":"Adrian Teixeira","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing"},{"ID":109821,"Title":"Documentation | SRS | Update Documentation for APIs","State":"Dev Complete","Name":"Adrian Teixeira","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing"},{"ID":101961,"Title":"API Governance | SRS&HLSG | Align SonarQube HTTP Response Rules with API Standards","State":"Dev Complete","Name":"Stacy Webb","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Heritage"},{"ID":107725,"Title":"Functions.THD | SRS | Create Temporal Codec Server","State":"Blocked","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD","Tags":"Building Products; Dev Testing"},{"ID":107577,"Title":"API Governance | Template build with defined standards-based Constitution using Spec Kit","State":"Active","Name":"Edgar Chavez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Spec Kit","Tags":"\u00a0"},{"ID":102822,"Title":"Functions.QuoteCenter (Linux) | SRS | Update PartitionKey Strategy for ATS SPSCommerce Log Tables Title","State":"Closed","Name":"Diego Flores","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"QuotesCenter","Tags":"Building Products; Deployed 3/17/2026; Dev Testing"},{"ID":102827,"Title":"Discovery | SRS | Revisit the Best Approach to Handle Agility and/or DB Failures for QC","State":"Closed","Name":"Diego Flores","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products"},{"ID":107365,"Title":"Documentation | SRS | Add ProCard technical documentation","State":"Closed","Name":"Adrian Duque","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products"},{"ID":106684,"Title":"Functions.Credits | SRS&HLSG | Enable Statement Print Due Date Flag for Bectran Customer Creations","State":"Closed","Name":"Adrian Duque","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026; Heritage; UAT testing"},{"ID":108258,"Title":"Functions.Credits | SRS&HLSG | Additional flags for new customers' ship-to","State":"Closed","Name":"Adrian Duque","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026; Heritage; UAT testing"},{"ID":106356,"Title":"Functions.Credit | SRS & HLSG | Bectran solution to use dedicated Agility user","State":"Ready for QA","Name":"Adrian Duque","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Heritage; UAT testing"},{"ID":105572,"Title":"Functions.THD | SRS | Feature Flag clean-up","State":"Ready for Release","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD","Tags":"Building Products; Dev Testing"},{"ID":105611,"Title":"Functions.THD | SRS | Setup HomeDepotAuth for THD Project in Development Environment","State":"Closed","Name":"Stacy Webb","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD","Tags":"Building Products; Dev Testing"},{"ID":106731,"Title":"Functions.Auth | AgilityServiceCollectionExtension | SRS | Standardize Agility SOAP Base URL Configuration","State":"Closed","Name":"Vinicius Mussak","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026"},{"ID":109992,"Title":"AdminUI | SRS | SPS Orders Access to L1-L2 Team members","State":"Closed","Name":"Diego Flores","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; INC0904592"},{"ID":105901,"Title":"Functions.DemoCustomer | SRS | Upgrade to .NET 10","State":"Ready for QA","Name":"Vinicius Mussak","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products"},{"ID":106182,"Title":"Functions.Products | SRS | INTHUB-Unexpected character encountered while parsing value: {. Path '[0].Certifications","State":"Closed","Name":"","Story Points":0.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; INC0887841"},{"ID":108090,"Title":"Data task | SRS | Replicate ODS Objects for SupplierPromotions Endpoint Testing","State":"Dev Complete","Name":"Vinoth Venkatesan","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing"},{"ID":108098,"Title":"SRS | Set up GitHub organization structure, teams, and permissions for SRS Integrations","State":"Closed","Name":"Stacy Webb","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"GitHub","Tags":"Building Products; Dev Testing"},{"ID":108100,"Title":"SRS | Create Newman repository and configure CI pipeline for integration testing","State":"Closed","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"GitHub","Tags":"Building Products; Dev Testing"},{"ID":108101,"Title":"SRS | Migrate LaunchDarkly shared library and configure artifact publishing pipeline","State":"Active","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"GitHub","Tags":"Building Products; Dev Testing"},{"ID":108102,"Title":"Functions.Auth | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"Closed","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026"},{"ID":108105,"Title":"Functions.Invoices | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"Closed","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026"},{"ID":108106,"Title":"Functions.Customers | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"Closed","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026"},{"ID":108107,"Title":"Functions.Products | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"In QA","Name":"Edgar Chavez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products"},{"ID":108104,"Title":"Functions.Orders | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"In QA","Name":"Diego Flores","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products"},{"ID":108108,"Title":"APIDOGS | SRS | Update APIDOGS documentation to include V2 APIM endpoints for CRM partners","State":"Ideation","Name":"Adrian Teixeira","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing"},{"ID":101077,"Title":"Documentation | SRS | Order Submission V1 Flow with Visual and Animated Diagrams","State":"In Development","Name":"Adrian Teixeira","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products"},{"ID":108289,"Title":"Discovery | SRS | Suggest SDK kit design","State":"Ideation","Name":"Edgar Chavez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"\u00a0"},{"ID":109568,"Title":"Discovery | SRS | Pricing preparation for Custumer DEMO","State":"Closed","Name":"Angel Perez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"\u00a0"},{"ID":99497,"Title":"Functions.Orders | SRS | QA manteinance","State":"Closed","Name":"Jyothi Pesingi","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products"},{"ID":99498,"Title":"Functions.DIMH | SRS | QA manteinance","State":"Closed","Name":"Sandhya Bobba","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD","Tags":"Building Products"},{"ID":99502,"Title":"IntegrationHub.NotificationProcessor | HLSG | QA manteinance","State":"Closed","Name":"Sandhya Bobba","Story Points":8.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Heritage"},{"ID":108376,"Title":"Spec kit | SRS DEV | Configure simplified custom DEV URL for existing Web App","State":"In Development","Name":"Sathish Kotha","Story Points":0.0,"Work Item Type":"User Story","Sprint":"4","Project":"Spec Kit","Tags":"Building Products"},{"ID":109307,"Title":"Admin UI | SRS | Enhance search filter in SubmitOrderLog page","State":"UAT","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; UAT testing"},{"ID":109382,"Title":"Functions.Orders | SRS | Add Dimensional Item Support to Submit Order V1 Endpoint","State":"Dev Complete","Name":"Diego Flores","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products"},{"ID":109383,"Title":"Functions.QuoteCenter (Linux) | SRS | Add Dimensional Item Detection and Payload Reshaping for THD POs","State":"Ideation","Name":"Diego Flores","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"QuotesCenter","Tags":"Building Products; UAT testing"},{"ID":109972,"Title":"Documentation | SRS | Create wiki page for installing a Temporal Local Development Server and configuring a project to connect to it.","State":"Ideation","Name":"Stacy Webb","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products"},{"ID":109996,"Title":"Functions.Customers | SRS | Details V2 | 200 response with empty data","State":"Ready for QA","Name":"Angel Silva","Story Points":0.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products"}];
+const RAW = [{"ID":109333,"Title":"IntegrationHub | SRS| Failing to process an order from SERVICETITAN","State":"Closed","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; Heritage; UAT testing","Created Date":"2026-03-12 12:00","Closed Date":"2026-03-16 08:49"},{"ID":109337,"Title":"Pair Programming | SRS | Failing to process an order from SERVICETITAN","State":"New","Name":"Adrian Teixeira","Story Points":0.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"","Created Date":"2026-03-12 12:17","Closed Date":""},{"ID":109584,"Title":"IntegrationHub | SRS | Transaction id affecting pricing in QA","State":"Closed","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"CRM Integration; Heritage; UAT testing","Created Date":"2026-03-16 10:46","Closed Date":"2026-03-18 09:02"},{"ID":109744,"Title":"IntegrationHub | SRS | Invalid Custumer Invalid JSON","State":"In Development","Name":"Angel Silva","Story Points":3.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing","Created Date":"2026-03-17 08:55","Closed Date":""},{"ID":109796,"Title":"IntegrationHub | SRS | Itens with error to bring pricing/inventory data","State":"New","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing","Created Date":"2026-03-17 12:52","Closed Date":""},{"ID":109982,"Title":"IntegrationHub | SRS | Unicode Replacement creating errors","State":"New","Name":"Angel Perez","Story Points":0.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing","Created Date":"2026-03-18 17:55","Closed Date":""},{"ID":110002,"Title":"SRS | STG | Active Branch Products timeouts","State":"Closed","Name":"Vinicius Mussak","Story Points":3.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing","Created Date":"2026-03-19 09:36","Closed Date":"2026-03-20 08:25"},{"ID":110004,"Title":"IntegrationHub | SRS | Error when setting up orders","State":"New","Name":"Angel Perez","Story Points":3.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing","Created Date":"2026-03-19 10:18","Closed Date":""},{"ID":110013,"Title":"IntegrationHub | SRS | Item failure ServiceTitan","State":"New","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; UAT testing","Created Date":"2026-03-19 12:40","Closed Date":""},{"ID":103424,"Title":"Functions.DIMH | SRS | Dev testing for Submit Order DIMH","State":"Closed","Name":"Adrian Teixeira","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD","Tags":"Building Products; Dev Testing","Created Date":"2026-01-29 11:15","Closed Date":"2026-11-03 08:19"},{"ID":106776,"Title":"SRS | Discovery \u2014 Changes of partner Catalog changes appear for AccuLynx by Day D+1","State":"Closed","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration","Created Date":"2026-02-23 18:03","Closed Date":"2026-03-16 08:50"},{"ID":108496,"Title":"SRS | Discovery \u2014 Price API response for itens With 0 price","State":"Closed","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration","Created Date":"2026-03-06 11:01","Closed Date":"2026-03-16 08:50"},{"ID":109558,"Title":"SRS | Support \u2014 Ironhouse Roofing Pricing V2 issues","State":"Closed","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration","Created Date":"2026-03-16 08:48","Closed Date":"2026-03-20 09:11"},{"ID":110016,"Title":"SRS | Integration hub \u2014 Webhook Configuration Openbooq","State":"Dev Complete","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration","Created Date":"2026-03-19 12:48","Closed Date":""},{"ID":107292,"Title":"Functions.Customers | SRS | Validate source system and log every request (including SQL for reporting)","State":"Ready for QA","Name":"Angel Perez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration","Created Date":"2026-02-26 08:48","Closed Date":""},{"ID":109178,"Title":"Functions.Customers | SRS | Customer Validate API | Some errors are not logged/reflected in SQL DB table","State":"Closed","Name":"Angel Perez","Story Points":2.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"CRM Integration; Heritage","Created Date":"2026-03-11 11:00","Closed Date":"2026-03-16 09:16"},{"ID":109536,"Title":"Functions.Customers | SRS Stage | Customer Validate API is giving 500 internal server error","State":"Closed","Name":"Angel Perez","Story Points":0.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2026-03-16 06:46","Closed Date":"2026-03-16 11:29"},{"ID":109435,"Title":"SRS | Create New Source System for JOBFLUSS in STG","State":"Closed","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration","Created Date":"2026-03-13 08:04","Closed Date":"2026-03-13 12:42"},{"ID":109436,"Title":"SRS | Create New Source System for SERVOS in STG","State":"Closed","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration","Created Date":"2026-03-13 08:09","Closed Date":"2026-03-13 12:36"},{"ID":109609,"Title":"SRS | Create New Source System for JOHNSON RESTORATION in STG","State":"Closed","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration","Created Date":"2026-03-16 14:56","Closed Date":"2026-03-17 13:36"},{"ID":109611,"Title":"SRS | Create New Source System for STELLAR in STG","State":"Closed","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration","Created Date":"2026-03-16 15:00","Closed Date":"2026-03-17 13:39"},{"ID":109995,"Title":"SRS | Create New Source System for SKQUALITYR in STG","State":"Closed","Name":"Angel Perez","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration","Created Date":"2026-03-19 09:03","Closed Date":"2026-03-19 10:11"},{"ID":105485,"Title":"Functions.Products | SRS | Create endpoint to retrieve UOMs for all products in a branch Available for all partners","State":"UAT","Name":"Angel Perez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; CRM Integration; UAT testing","Created Date":"2026-12-02 10:23","Closed Date":""},{"ID":104996,"Title":"Functions.Quickbooks | SRS | Automatically Retry Failed Invoices during Invoice Sync","State":"Closed","Name":"Diego Flores","Story Points":3.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/10/2026; Dev Testing","Created Date":"2026-09-02 15:31","Closed Date":"2026-11-03 08:14"},{"ID":104621,"Title":"Functions.QuoteCenter (Linux) | SRS | Improve error visibility in HD Monitoring","State":"Closed","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"Bug","Sprint":"4","Project":"QuotesCenter","Tags":"Building Products; Deployed 3/10/2026; Dev Testing","Created Date":"2026-05-02 10:02","Closed Date":"2026-11-03 08:14"},{"ID":108036,"Title":"Functions.Auth | SRS | Okta endpoint throwing 500 error","State":"Closed","Name":"Diego Flores","Story Points":0.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/10/2026","Created Date":"2026-04-03 10:31","Closed Date":"2026-11-03 08:17"},{"ID":106890,"Title":"SRS | Create a sample project using Spec-Kit driven development and demo it","State":"Closed","Name":"Edgar Chavez","Story Points":8.0,"Work Item Type":"User Story","Sprint":"4","Project":"Spec Kit","Tags":"Building Products; Dev Testing","Created Date":"2026-02-24 09:34","Closed Date":"2026-03-17 02:13"},{"ID":105337,"Title":"SRS & HLSG | Create Dedicated IntegrationHub Postman Workspace and Organize Active Collections","State":"In Development","Name":"Adrian Duque","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing; Heritage","Created Date":"2026-11-02 12:43","Closed Date":""},{"ID":105448,"Title":"Functions.QuoteCenter (Linux) | SRS | Test dimensional items and recommended implementation","State":"Closed","Name":"Edgar Chavez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"QuotesCenter","Tags":"Building Products; UAT testing","Created Date":"2026-12-02 08:18","Closed Date":"2026-12-03 08:37"},{"ID":100526,"Title":"Agility | HLSG | IntHub.Services.Agilty | Remove duplicate Environment Variables","State":"Ready for Release","Name":"Diego Flores","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Heritage","Created Date":"2026-05-01 09:49","Closed Date":""},{"ID":106676,"Title":"SRS | API v2 Endpoints with Backward Compatibility","State":"Dev Complete","Name":"Adrian Teixeira","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2026-02-23 12:27","Closed Date":""},{"ID":105460,"Title":"SRS | Password protect APIDOG and rollout","State":"Blocked","Name":"Adrian Teixeira","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; UAT testing","Created Date":"2026-12-02 09:31","Closed Date":""},{"ID":105443,"Title":"Discovery | SRS | Create Temporal POC","State":"Gathering Requirements","Name":"Stacy Webb","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing","Created Date":"2026-12-02 08:04","Closed Date":""},{"ID":109322,"Title":"Documentation | SRS | Update Documentation for Pricing","State":"Ideation","Name":"Adrian Teixeira","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing","Created Date":"2026-12-03 10:47","Closed Date":""},{"ID":109821,"Title":"Documentation | SRS | Update Documentation for APIs","State":"Dev Complete","Name":"Adrian Teixeira","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing","Created Date":"2026-03-17 14:19","Closed Date":""},{"ID":101961,"Title":"API Governance | SRS&HLSG | Align SonarQube HTTP Response Rules with API Standards","State":"Dev Complete","Name":"Stacy Webb","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Heritage","Created Date":"2026-01-16 14:07","Closed Date":""},{"ID":107725,"Title":"Functions.THD | SRS | Create Temporal Codec Server","State":"Blocked","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD","Tags":"Building Products; Dev Testing","Created Date":"2026-02-03 08:35","Closed Date":""},{"ID":107577,"Title":"API Governance | Template build with defined standards-based Constitution using Spec Kit","State":"Active","Name":"Edgar Chavez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Spec Kit","Tags":"","Created Date":"2026-02-28 14:59","Closed Date":""},{"ID":102822,"Title":"Functions.QuoteCenter (Linux) | SRS | Update PartitionKey Strategy for ATS SPSCommerce Log Tables Title","State":"Closed","Name":"Diego Flores","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"QuotesCenter","Tags":"Building Products; Deployed 3/17/2026; Dev Testing","Created Date":"2026-01-23 13:05","Closed Date":"2026-03-19 08:59"},{"ID":102827,"Title":"Discovery | SRS | Revisit the Best Approach to Handle Agility and/or DB Failures for QC","State":"Closed","Name":"Diego Flores","Story Points":3.0,"Work Item Type":"Bug","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2026-01-23 13:13","Closed Date":"2026-11-03 13:18"},{"ID":107365,"Title":"Documentation | SRS | Add ProCard technical documentation","State":"Closed","Name":"Adrian Duque","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2026-02-26 16:26","Closed Date":"2026-03-16 11:15"},{"ID":106684,"Title":"Functions.Credits | SRS&HLSG | Enable Statement Print Due Date Flag for Bectran Customer Creations","State":"Closed","Name":"Adrian Duque","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026; Heritage; UAT testing","Created Date":"2026-02-23 13:47","Closed Date":"2026-03-19 09:00"},{"ID":108258,"Title":"Functions.Credits | SRS&HLSG | Additional flags for new customers' ship-to","State":"Closed","Name":"Adrian Duque","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026; Heritage; UAT testing","Created Date":"2026-05-03 08:01","Closed Date":"2026-03-19 09:01"},{"ID":106356,"Title":"Functions.Credit | SRS & HLSG | Bectran solution to use dedicated Agility user","State":"Ready for QA","Name":"Adrian Duque","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Heritage; UAT testing","Created Date":"2026-02-20 09:57","Closed Date":""},{"ID":105572,"Title":"Functions.THD | SRS | Feature Flag clean-up","State":"Ready for Release","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD","Tags":"Building Products; Dev Testing","Created Date":"2026-02-13 10:35","Closed Date":""},{"ID":105611,"Title":"Functions.THD | SRS | Setup HomeDepotAuth for THD Project in Development Environment","State":"Closed","Name":"Stacy Webb","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD","Tags":"Building Products; Dev Testing","Created Date":"2026-02-13 16:25","Closed Date":"2026-03-05 17:31"},{"ID":106731,"Title":"Functions.Auth | AgilityServiceCollectionExtension | SRS | Standardize Agility SOAP Base URL Configuration","State":"Closed","Name":"Vinicius Mussak","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026","Created Date":"2026-02-23 14:30","Closed Date":"2026-03-18 09:03"},{"ID":109992,"Title":"AdminUI | SRS | SPS Orders Access to L1-L2 Team members","State":"Closed","Name":"Diego Flores","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; INC0904592","Created Date":"2026-03-19 08:07","Closed Date":"2026-03-19 09:10"},{"ID":105901,"Title":"Functions.DemoCustomer | SRS | Upgrade to .NET 10","State":"Ready for QA","Name":"Vinicius Mussak","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2026-02-17 14:57","Closed Date":""},{"ID":106182,"Title":"Functions.Products | SRS | INTHUB-Unexpected character encountered while parsing value: {. Path '[0].Certifications","State":"Closed","Name":"","Story Points":0.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; INC0887841","Created Date":"2026-02-19 08:50","Closed Date":"2026-09-03 10:17"},{"ID":108090,"Title":"Data task | SRS | Replicate ODS Objects for SupplierPromotions Endpoint Testing","State":"Dev Complete","Name":"Vinoth Venkatesan","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing","Created Date":"2026-04-03 15:58","Closed Date":""},{"ID":108098,"Title":"SRS | Set up GitHub organization structure, teams, and permissions for SRS Integrations","State":"Closed","Name":"Stacy Webb","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"GitHub","Tags":"Building Products; Dev Testing","Created Date":"2026-04-03 16:36","Closed Date":"2026-03-16 13:15"},{"ID":108100,"Title":"SRS | Create Newman repository and configure CI pipeline for integration testing","State":"Closed","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"GitHub","Tags":"Building Products; Dev Testing","Created Date":"2026-04-03 16:43","Closed Date":"2026-03-16 15:39"},{"ID":108101,"Title":"SRS | Migrate LaunchDarkly shared library and configure artifact publishing pipeline","State":"Active","Name":"Stacy Webb","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"GitHub","Tags":"Building Products; Dev Testing","Created Date":"2026-04-03 16:45","Closed Date":""},{"ID":108102,"Title":"Functions.Auth | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"Closed","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026","Created Date":"2026-04-03 16:52","Closed Date":"2026-03-19 08:59"},{"ID":108105,"Title":"Functions.Invoices | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"Closed","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026","Created Date":"2026-04-03 17:01","Closed Date":"2026-03-19 08:59"},{"ID":108106,"Title":"Functions.Customers | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"Closed","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Deployed 3/17/2026","Created Date":"2026-04-03 17:02","Closed Date":"2026-03-19 08:58"},{"ID":108107,"Title":"Functions.Products | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"In QA","Name":"Edgar Chavez","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2026-04-03 17:02","Closed Date":""},{"ID":108104,"Title":"Functions.Orders | SRS | Create V2 virtual routes in APIM for customer facing endpoints","State":"In QA","Name":"Diego Flores","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2026-04-03 17:00","Closed Date":""},{"ID":108108,"Title":"APIDOGS | SRS | Update APIDOGS documentation to include V2 APIM endpoints for CRM partners","State":"Ideation","Name":"Adrian Teixeira","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; Dev Testing","Created Date":"2026-04-03 17:06","Closed Date":""},{"ID":101077,"Title":"Documentation | SRS | Order Submission V1 Flow with Visual and Animated Diagrams","State":"In Development","Name":"Adrian Teixeira","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2026-08-01 10:53","Closed Date":""},{"ID":108289,"Title":"Discovery | SRS | Suggest SDK kit design","State":"Ideation","Name":"Edgar Chavez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"","Created Date":"2026-05-03 10:11","Closed Date":""},{"ID":109568,"Title":"Discovery | SRS | Pricing preparation for Custumer DEMO","State":"Closed","Name":"Angel Perez","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"","Created Date":"2026-03-16 09:44","Closed Date":"2026-03-17 09:47"},{"ID":99497,"Title":"Functions.Orders | SRS | QA manteinance","State":"Closed","Name":"Jyothi Pesingi","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2025-12-18 10:56","Closed Date":"2026-06-03 06:57"},{"ID":99498,"Title":"Functions.DIMH | SRS | QA manteinance","State":"Closed","Name":"Sandhya Bobba","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"THD","Tags":"Building Products","Created Date":"2025-12-18 10:56","Closed Date":"2026-09-03 05:24"},{"ID":99502,"Title":"IntegrationHub.NotificationProcessor | HLSG | QA manteinance","State":"Closed","Name":"Sandhya Bobba","Story Points":8.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Heritage","Created Date":"2025-12-18 10:59","Closed Date":"2026-12-03 06:49"},{"ID":108376,"Title":"Spec kit | SRS DEV | Configure simplified custom DEV URL for existing Web App","State":"In Development","Name":"Sathish Kotha","Story Points":0.0,"Work Item Type":"User Story","Sprint":"4","Project":"Spec Kit","Tags":"Building Products","Created Date":"2026-05-03 11:14","Closed Date":""},{"ID":109307,"Title":"Admin UI | SRS | Enhance search filter in SubmitOrderLog page","State":"UAT","Name":"Angel Silva","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products; UAT testing","Created Date":"2026-12-03 08:56","Closed Date":""},{"ID":109382,"Title":"Functions.Orders | SRS | Add Dimensional Item Support to Submit Order V1 Endpoint","State":"Dev Complete","Name":"Diego Flores","Story Points":5.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2026-12-03 16:50","Closed Date":""},{"ID":109383,"Title":"Functions.QuoteCenter (Linux) | SRS | Add Dimensional Item Detection and Payload Reshaping for THD POs","State":"Ideation","Name":"Diego Flores","Story Points":3.0,"Work Item Type":"User Story","Sprint":"4","Project":"QuotesCenter","Tags":"Building Products; UAT testing","Created Date":"2026-12-03 16:59","Closed Date":""},{"ID":109972,"Title":"Documentation | SRS | Create wiki page for installing a Temporal Local Development Server and configuring a project to connect to it.","State":"Ideation","Name":"Stacy Webb","Story Points":2.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2026-03-18 14:31","Closed Date":""},{"ID":109996,"Title":"Functions.Customers | SRS | Details V2 | 200 response with empty data","State":"Ready for QA","Name":"Angel Silva","Story Points":1.0,"Work Item Type":"User Story","Sprint":"4","Project":"Other","Tags":"Building Products","Created Date":"2026-03-19 09:04","Closed Date":""}];
 
 // ============ CHART CONFIG ============
 const TEAL = '#08bdba';
@@ -1087,31 +1214,132 @@ function renderCompletedChart(data) {
 }
 
 function renderCRMKPIs(data) {
+  destroyChart('chart-crm-sp');
+
   const crmItems = data.filter(d => (d.Tags || '').toUpperCase().includes('CRM'));
   const totalCRM = crmItems.length;
-  const crmBugs = crmItems.filter(d => d['Work Item Type'] === 'Bug').length;
   const closedCRM = crmItems.filter(d => d.State === 'Closed').length;
   const crmClosureRate = totalCRM > 0 ? Math.round((closedCRM / totalCRM) * 100) : 0;
 
-  const kpis = [
-    { label: 'Total CRM Work', value: totalCRM, desc: 'Items tagged CRM', cls: '' },
-    { label: 'CRM Bugs', value: crmBugs, desc: 'Bug type + CRM tag', cls: 'blue-tint' },
-    { label: 'Avg Resolution', value: 'N/A', desc: 'Requires closed date data', cls: '' },
-    { label: 'CRM Closure Rate', value: `${crmClosureRate}%`, desc: `${closedCRM} of ${totalCRM} closed`, cls: 'blue-tint' },
-  ];
+  // Bug detection by title keywords
+  const isBug = t => /error|fail|invalid|timeout|unicode|replacement/i.test(t);
+  const crmBugs = crmItems.filter(d => isBug(d.Title));
+  const openBugs = crmBugs.filter(d => d.State !== 'Closed');
+  const closedBugs = crmBugs.filter(d => d.State === 'Closed');
 
+  // Avg resolution time — computed from Tags+dates in RAW (all sprints, not filtered)
+  const rawCRM = RAW.filter(d => (d.Tags || '').toUpperCase().includes('CRM'));
+  const resolvable = rawCRM.filter(d => d['Closed Date'] && d['Created Date']);
+  let avgDays = 'N/A';
+  if (resolvable.length > 0) {
+    const totalMs = resolvable.reduce((sum, d) => {
+      const diff = new Date(d['Closed Date']) - new Date(d['Created Date']);
+      return sum + (isNaN(diff) ? 0 : diff);
+    }, 0);
+    avgDays = (totalMs / resolvable.length / 86400000).toFixed(1);
+  }
+
+  // SP metrics
+  const spClosed = crmItems.filter(d => d.State === 'Closed').reduce((s,d) => s+(d['Story Points']||0), 0);
+  const spTotal  = crmItems.reduce((s,d) => s+(d['Story Points']||0), 0);
+  const spRemaining = spTotal - spClosed;
+
+  // ---- Top KPI cards ----
   const container = document.getElementById('crm-kpis');
   container.innerHTML = '';
-  kpis.forEach(k => {
-    const div = document.createElement('div');
-    div.className = `kpi-card ${k.cls}`;
-    div.innerHTML = `
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-number">${k.value}</div>
-      <div class="kpi-desc">${k.desc}</div>
+  const cards = [
+    { label: 'Total CRM Items',    value: totalCRM,         sub: `${closedCRM} closed · ${totalCRM - closedCRM} open`,    cls: 'accent-teal',   numCls: 'teal',   pct: crmClosureRate },
+    { label: 'CRM Bugs',           value: crmBugs.length,   sub: `${openBugs.length} open · ${closedBugs.length} closed`,  cls: 'accent-orange', numCls: 'orange', pct: Math.round(closedBugs.length/Math.max(crmBugs.length,1)*100) },
+    { label: 'Avg Resolution Time',value: avgDays === 'N/A' ? 'N/A' : `${avgDays}d`, sub: `across ${resolvable.length} resolved items`, cls: 'accent-blue', numCls: 'blue', pct: null },
+    { label: 'SP Completed',       value: spClosed,         sub: `${spRemaining} SP remaining of ${spTotal} total`,       cls: 'accent-purple', numCls: 'purple', pct: spTotal > 0 ? Math.round(spClosed/spTotal*100) : 0 },
+  ];
+  cards.forEach(k => {
+    const el = document.createElement('div');
+    el.className = `crm-kpi-card ${k.cls}`;
+    el.innerHTML = `
+      <div class="crm-kpi-label">${k.label}</div>
+      <div class="crm-kpi-number ${k.numCls}">${k.value}</div>
+      <div class="crm-kpi-sub">${k.sub}</div>
+      ${k.pct !== null ? `<div class="crm-kpi-bar-bg"><div class="crm-kpi-bar-fill" style="width:${k.pct}%"></div></div>` : ''}
     `;
-    container.appendChild(div);
+    container.appendChild(el);
   });
+
+  // ---- Bug list ----
+  const badge = document.getElementById('crm-bug-count-badge');
+  if (badge) badge.textContent = `${openBugs.length} open · ${closedBugs.length} closed`;
+  const bugList = document.getElementById('crm-bug-list');
+  if (bugList) {
+    const allBugs = [...openBugs, ...closedBugs];
+    bugList.innerHTML = allBugs.length === 0
+      ? '<div style="font-size:12px;color:var(--subtext);padding:8px;">No CRM bugs found.</div>'
+      : allBugs.map(d => {
+          const stateClass = d.State === 'Closed' ? 'closed' : d.State === 'In Development' ? 'in-dev' : 'open';
+          const stateLabel = d.State === 'Gathering Requirements' ? 'Gathering Req.' : d.State;
+          const shortTitle = d.Title.replace(/IntegrationHub \| SRS \| /,'').replace(/Functions\.\w+ \| SRS \| /,'');
+          return `<div class="crm-bug-item">
+            <span class="crm-bug-state ${stateClass}">${stateLabel}</span>
+            <span class="crm-bug-title" title="${d.Title}">${shortTitle}</span>
+            <span class="crm-bug-sp">${d['Story Points'] || 0} SP</span>
+          </div>`;
+        }).join('');
+  }
+
+  // ---- SP by person (CRM items only) ----
+  const spByPerson = {};
+  crmItems.forEach(d => {
+    if (d.Name && d.Name.trim()) {
+      spByPerson[d.Name] = (spByPerson[d.Name] || 0) + (d['Story Points'] || 0);
+    }
+  });
+  const spSorted = Object.entries(spByPerson).sort((a,b) => b[1]-a[1]);
+  const personColors = ['#08bdba','#0288d1','#26c6da','#4dd0ce','#00897b','#80deea'];
+
+  const spContent = document.getElementById('crm-sp-breakdown');
+  if (spContent) {
+    spContent.innerHTML = spSorted.map(([name, sp], i) => `
+      <div class="crm-sp-row">
+        <span class="crm-sp-dot" style="background:${personColors[i % personColors.length]}"></span>
+        <span class="crm-sp-name">${name}</span>
+        <span class="crm-sp-val">${sp} SP</span>
+      </div>
+    `).join('');
+  }
+
+  // ---- Donut chart SP closed vs open ----
+  const spCtx = document.getElementById('chart-crm-sp');
+  if (spCtx) {
+    charts['chart-crm-sp'] = new Chart(spCtx.getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['SP Completed', 'SP Remaining'],
+        datasets: [{ data: [spClosed, Math.max(spRemaining, 0)],
+          backgroundColor: ['#08bdba', '#e0f7f7'],
+          borderWidth: 3, borderColor: '#fff', hoverOffset: 6 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { size: 11 }, color: '#5c7580', padding: 10 } },
+          tooltip: { callbacks: { label: c => ` ${c.label}: ${c.raw} SP` } }
+        }
+      },
+      plugins: [{
+        id: 'centerText',
+        afterDraw(chart) {
+          const { ctx, chartArea: { width, height, left, top } } = chart;
+          ctx.save();
+          ctx.font = "bold 20px 'DM Mono', monospace";
+          ctx.fillStyle = '#00897b';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(`${spTotal > 0 ? Math.round(spClosed/spTotal*100) : 0}%`, left + width/2, top + height/2);
+          ctx.restore();
+        }
+      }]
+    });
+  }
 }
 
 // ============ VELOCITY USER FILTER INIT ============
@@ -1247,7 +1475,7 @@ function renderDailyBurnup(data) {
   const sprint4 = SPRINT_CONFIG['4'];
   const workingDays = getWorkingDays(sprint4.start, sprint4.end);
   const totalDays = workingDays.length;
-  const today = new Date('2026-03-13T00:00:00');
+  const today = new Date('2026-03-20T00:00:00');
 
   const closedSP = filtered.filter(d => d.Sprint === '4' && d.State === 'Closed').reduce((s,d) => s+(d['Story Points']||0), 0);
   const totalSP  = filtered.filter(d => d.Sprint === '4').reduce((s,d) => s+(d['Story Points']||0), 0);
