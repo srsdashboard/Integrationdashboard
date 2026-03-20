@@ -264,6 +264,61 @@
     color: var(--subtext);
   }
 
+  /* ===== PROJECT SLICER ===== */
+  .project-slicer {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 36px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .slicer-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    color: var(--subtext);
+    white-space: nowrap;
+  }
+  .slicer-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .slicer-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--subtext);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    user-select: none;
+  }
+  .slicer-pill:hover {
+    border-color: var(--teal);
+    color: var(--teal-dark);
+    background: var(--teal-light);
+  }
+  .slicer-pill.active {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    color: var(--teal-dark);
+    box-shadow: 0 1px 6px rgba(8,189,186,0.15);
+  }
+  .pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
   /* ===== FILTER BAR ===== */
   .filter-bar {
     background: var(--white);
@@ -605,7 +660,7 @@
       <div class="ss-sub-row">
         <div class="ss-bar-bg"><div class="ss-bar-fill" style="width:49.3%"></div></div>
       </div>
-      <div class="ss-delta positive">▲ +24.3% vs Sprint 3</div>
+      <div class="ss-hint">Sprint 4</div>
     </div>
 
     <!-- Story Points -->
@@ -677,6 +732,28 @@
   </div>
   <div class="filter-sep"></div>
   <div class="filter-reset" onclick="resetFilters()">↺ Reset</div>
+</div>
+
+<!-- PROJECT SLICER -->
+<div class="project-slicer">
+  <span class="slicer-label">Projects</span>
+  <div class="slicer-pills" id="project-slicer">
+    <div class="slicer-pill active" data-project="" onclick="selectProject(this)">
+      <span class="pill-dot" style="background:var(--teal)"></span>All
+    </div>
+    <div class="slicer-pill" data-project="THD" onclick="selectProject(this)">
+      <span class="pill-dot" style="background:#0288d1"></span>THD
+    </div>
+    <div class="slicer-pill" data-project="QuotesCenter" onclick="selectProject(this)">
+      <span class="pill-dot" style="background:#26c6da"></span>QuotesCenter
+    </div>
+    <div class="slicer-pill" data-project="Spec Kit" onclick="selectProject(this)">
+      <span class="pill-dot" style="background:#00897b"></span>Spec Kit
+    </div>
+    <div class="slicer-pill" data-project="GitHub" onclick="selectProject(this)">
+      <span class="pill-dot" style="background:#4dd0ce"></span>GitHub
+    </div>
+  </div>
 </div>
 
 <!-- DASHBOARD BODY -->
@@ -825,6 +902,16 @@ let activeFilters = { sprint: '', user: '', type: '', status: '' };
   });
 })();
 
+// ============ PROJECT SLICER ============
+let activeProject = '';
+
+function selectProject(el) {
+  document.querySelectorAll('.slicer-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  activeProject = el.dataset.project;
+  applyFilters();
+}
+
 function getFiltered() {
   let data = [...RAW];
   const sprint = document.getElementById('f-sprint').value;
@@ -835,12 +922,16 @@ function getFiltered() {
   if (user) data = data.filter(d => d.Name === user);
   if (type) data = data.filter(d => d['Work Item Type'] === type);
   if (status) data = data.filter(d => d.State === status);
+  if (activeProject) data = data.filter(d => d.Project === activeProject);
   return data;
 }
 
 function resetFilters() {
   ['f-sprint','f-user','f-type','f-status'].forEach(id => document.getElementById(id).value = '');
   ['f-date-start','f-date-end'].forEach(id => document.getElementById(id).value = '');
+  activeProject = '';
+  document.querySelectorAll('.slicer-pill').forEach(p => p.classList.remove('active'));
+  document.querySelector('.slicer-pill[data-project=""]').classList.add('active');
   applyFilters();
 }
 
@@ -885,7 +976,7 @@ function renderCapacity(data) {
 function renderProjectsChart(data) {
   destroyChart('projects');
   const counts = {};
-  data.forEach(d => { counts[d.Project] = (counts[d.Project] || 0) + 1; });
+  data.filter(d => d.Project !== 'Other').forEach(d => { counts[d.Project] = (counts[d.Project] || 0) + 1; });
   const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
   const ctx = document.getElementById('chart-projects').getContext('2d');
   charts.projects = new Chart(ctx, {
