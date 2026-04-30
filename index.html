@@ -494,10 +494,7 @@
         <div class="header-subtitle">CRM &amp; Business Projects Dashboard</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <div class="header-badge">Sprint 6 · Active</div>
-      <button onclick="openReportPanel()" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;padding:8px 20px;background:rgba(2,136,209,0.22);color:#4fc3f7;border:1px solid rgba(2,136,209,0.5);border-radius:20px;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;" onmouseover="this.style.background='rgba(2,136,209,0.38)'" onmouseout="this.style.background='rgba(2,136,209,0.22)'">Report Generator</button>
-    </div>
+    <div class="header-badge">Sprint 6 · Active</div>
   </div>
 </div>
 
@@ -690,6 +687,35 @@
 
 
 
+
+    <!-- SECTION 4: Report Generator -->
+    <div class="section-block" id="report-section">
+      <div class="section-header">
+        <div class="section-title">
+          Report Generator
+          <span class="section-pill" style="background:#e3f2fd;color:#0277bd;">Sprint Report</span>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border);">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--subtext);">Sprint</div>
+        <button id="rpt-pill-5" onclick="rptPill('5')" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;cursor:pointer;border:2px solid #b2dfdb;background:#fff;color:#00695c;">Sprint 5</button>
+        <button id="rpt-pill-6" onclick="rptPill('6')" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;cursor:pointer;border:2px solid #08bdba;background:#08bdba;color:#fff;">Sprint 6</button>
+        <div style="width:1px;height:24px;background:var(--border);"></div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--subtext);">Date Range</div>
+        <input type="date" id="rpt-ds" style="font-family:'DM Sans',sans-serif;font-size:12px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;outline:none;background:var(--white);" />
+        <span style="color:var(--subtext);font-size:12px;">to</span>
+        <input type="date" id="rpt-de" style="font-family:'DM Sans',sans-serif;font-size:12px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;outline:none;background:var(--white);" />
+        <button id="rpt-gen-btn" onclick="buildReport()" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;padding:7px 22px;background:#0288d1;color:#fff;border:none;border-radius:var(--radius-sm);cursor:pointer;">Generate</button>
+        <button id="rpt-pdf-btn" onclick="copyReportText()" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:7px 16px;background:#00897b;color:#fff;border:none;border-radius:var(--radius-sm);cursor:pointer;display:none;">Copy as Plain Text</button>
+      </div>
+
+      <!-- Output area -->
+      <div id="rpt-out" style="margin-top:4px;"></div>
+    </div>
+
+    
   </div><!-- /main-area -->
 </div><!-- /dashboard-body -->
 
@@ -1384,300 +1410,357 @@ function applyFilters() {
 }
 
 
-// Initial render
-applyFilters();
+// ============ REPORT GENERATOR ============
+var rptSprint = '6';
 
-// ============ REPORT GENERATOR PANEL ============
-var rptActiveSprint = '6';
-
-function openReportPanel() {
-  var panel   = document.getElementById('rpt-panel');
-  var overlay = document.getElementById('rpt-overlay');
-  panel.style.transform   = 'translateX(0)';
-  panel.style.visibility  = 'visible';
-  overlay.style.opacity   = '1';
-  overlay.style.pointerEvents = 'auto';
-  document.body.style.overflow = 'hidden';
-}
-
-function closeReportPanel() {
-  var panel   = document.getElementById('rpt-panel');
-  var overlay = document.getElementById('rpt-overlay');
-  panel.style.transform   = 'translateX(100%)';
-  panel.style.visibility  = 'hidden';
-  overlay.style.opacity   = '0';
-  overlay.style.pointerEvents = 'none';
-  document.body.style.overflow = '';
-}
-
-function rptTogglePill(sprint) {
-  rptActiveSprint = (rptActiveSprint === sprint) ? '' : sprint;
-  var pills = {'5': document.getElementById('rpt-pill-5'), '6': document.getElementById('rpt-pill-6')};
-  ['5','6'].forEach(function(s) {
-    var btn = pills[s];
-    if (!btn) return;
-    if (s === rptActiveSprint) {
-      btn.style.background = '#08bdba'; btn.style.color = '#fff'; btn.style.borderColor = '#08bdba';
+function rptPill(s) {
+  rptSprint = (rptSprint === s) ? '' : s;
+  ['5','6'].forEach(function(x) {
+    var b = document.getElementById('rpt-pill-'+x);
+    if (!b) return;
+    if (x === rptSprint) {
+      b.style.background = '#08bdba';
+      b.style.color = '#fff';
+      b.style.borderColor = '#08bdba';
     } else {
-      btn.style.background = '#fff'; btn.style.color = '#00695c'; btn.style.borderColor = '#b2dfdb';
+      b.style.background = '#fff';
+      b.style.color = '#00695c';
+      b.style.borderColor = '#b2dfdb';
     }
   });
 }
 
-function rptExtractDeploys(data) {
-  var seen = {};
-  data.forEach(function(item) {
-    var tags = item.Tags || '';
-    var m = tags.match(/Deployed\s+([\d/]+)/gi);
-    if (m) m.forEach(function(x){ seen[x.trim()] = 1; });
-  });
-  return Object.keys(seen).length;
-}
-
-function rptCalcMTTR(items) {
-  var BH = 8;
-  var closed = items.filter(function(d) {
-    return d.State==='Closed' && d['Work Item Type']==='Bug' && d['Closed Date'] && d['Created Date'];
-  });
-  if (!closed.length) return 'N/A';
-  var vals = closed.map(function(d) {
-    var c0 = new Date(d['Created Date']+'T00:00:00');
-    var c1 = new Date(d['Closed Date']+'T00:00:00');
-    var days=0, cur=new Date(c0);
-    while (cur<=c1) { if(cur.getDay()!==0&&cur.getDay()!==6) days++; cur.setDate(cur.getDate()+1); }
-    return Math.max(1, days) * BH;
-  });
-  var avg = vals.reduce(function(a,b){return a+b;},0) / vals.length;
-  if (avg < 8) return avg.toFixed(1)+' hrs';
-  var d=Math.floor(avg/8), h=Math.round(avg%8*10)/10;
-  return h>0 ? d+'d '+h+'h' : d+'d';
-}
-
-function rptBuildInsights(data) {
-  var closed = data.filter(function(d){return d.State==='Closed';});
-  var crm = data.filter(function(d){return d.Project==='CRM Insights'&&d.State==='Closed';});
-  var pmap = {};
-  crm.forEach(function(d){ var m=d.Title.match(/for ([A-Z][A-Z0-9]+)\b/); if(m) pmap[m[1]]=1; });
-  var pl = Object.keys(pmap);
-
-  var customer = [];
-  if (pl.length) customer.push('Onboarded and supported '+pl.length+' CRM partner'+(pl.length>1?'s':'')+': '+pl.slice(0,6).join(', ')+(pl.length>6?'...':'')+'.'); 
-  var of2 = closed.filter(function(d){return d.Title.toLowerCase().indexOf('order')!==-1&&d['Work Item Type']==='Bug';});
-  if (of2.length) customer.push('Resolved '+of2.length+' order bug'+(of2.length>1?'s':'')+', improving submission reliability.');
-  var wh = closed.filter(function(d){return d.Title.toLowerCase().indexOf('webhook')!==-1;});
-  if (wh.length) customer.push('Configured '+wh.length+' webhook'+(wh.length>1?'s':'')+' (STG & PROD) for real-time event delivery.');
-  if (customer.length < 3) customer.push('Customer validate API enhancements improve partner authentication and error reporting.');
-
-  var tech = [];
-  var ni = data.filter(function(d){return d.Title.indexOf('.NET 10')!==-1;});
-  if (ni.length) tech.push('.NET 10 migration: '+ni.filter(function(d){return d.State==='Closed';}).length+' of '+ni.length+' services upgraded.');
-  var tmp = closed.filter(function(d){return d.Title.toLowerCase().indexOf('temporal')!==-1;});
-  if (tmp.length) tech.push('Temporal infrastructure: '+tmp.length+' item'+(tmp.length>1?'s':'')+' completed (THD & QuoteCenter).');
-  var dep = rptExtractDeploys(data);
-  if (dep) tech.push(dep+' deployment event'+(dep>1?'s':'')+' executed across STG / PROD.');
-  var her = data.filter(function(d){return d.Project==='Heritage HIPS'&&d.State==='Closed'&&d['Work Item Type']==='User Story';});
-  if (her.length) tech.push(her.length+' Heritage HIPS enhancement'+(her.length>1?'s':'')+' (Orders, Shipments, Invoices).');
-  if (tech.length < 3) tech.push('Shared Azure Artifacts store configured for GitHub repositories.');
-
-  var ops = [];
-  var bc = closed.filter(function(d){return d['Work Item Type']==='Bug';});
-  if (bc.length) ops.push(bc.length+' bug'+(bc.length>1?'s':'')+' resolved, reducing production incidents and escalations.');
-  var inc = data.filter(function(d){return (d.Tags||'').indexOf('INC')!==-1;});
-  if (inc.length) ops.push(inc.filter(function(d){return d.State==='Closed';}).length+' incident-linked items resolved of '+inc.length+' tracked.');
-  var uc = closed.filter(function(d){ var t=d.Title.toLowerCase(); return t.indexOf('unicode')!==-1||t.indexOf('emoji')!==-1||t.indexOf('special char')!==-1; });
-  if (uc.length) ops.push('Unicode / special character sanitization extended to order submission.');
-  var cr = closed.filter(function(d){return d.Title.toLowerCase().indexOf('credentials')!==-1;});
-  if (cr.length) ops.push(cr.length+' PROD credential'+(cr.length>1?'s':'')+' provisioned for new partner onboardings.');
-  if (ops.length < 3) ops.push('Sprint velocity and burnup tracking provide real-time delivery transparency.');
-
-  return {customer:customer, tech:tech, ops:ops};
-}
-
-function rptKpi(label, value, desc, accent) {
-  return '<div style="background:#fff;border:1px solid #d8eeed;border-top:3px solid '+accent+';border-radius:8px;padding:12px 14px;">'
-    +'<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#6b8f8e;margin-bottom:3px;">'+label+'</div>'
-    +'<div style="font-size:24px;font-weight:700;color:'+accent+';line-height:1;font-family:monospace;">'+value+'</div>'
-    +'<div style="font-size:11px;color:#9ab8b7;margin-top:3px;">'+desc+'</div>'
-    +'</div>';
-}
-
-function rptSecHead(label, accent) {
-  return '<div style="display:flex;align-items:center;gap:8px;margin:22px 0 10px;">'
-    +'<div style="width:4px;height:16px;background:'+accent+';border-radius:2px;"></div>'
-    +'<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.9px;color:'+accent+';">'+label+'</div>'
-    +'</div>';
-}
-
-function rptInsightCol(title, items, accent) {
-  var rows = items.map(function(it){
-    return '<div style="display:flex;gap:7px;margin-bottom:6px;align-items:flex-start;">'
-      +'<span style="color:'+accent+';font-weight:700;flex-shrink:0;">&#8212;</span>'
-      +'<span style="font-size:12px;color:#2a3f45;line-height:1.45;">'+it+'</span>'
-      +'</div>';
-  }).join('');
-  return '<div style="background:#fff;border:1px solid #d8eeed;border-radius:8px;padding:14px;">'
-    +'<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:'+accent+';margin-bottom:10px;">'+title+'</div>'
-    +rows+'</div>';
-}
-
-function generateReport() {
-  var sprint = rptActiveSprint;
-  var ds = document.getElementById('rpt-date-start').value;
-  var de = document.getElementById('rpt-date-end').value;
+function buildReport() {
+  var sp = rptSprint;
+  var ds = document.getElementById('rpt-ds').value;
+  var de = document.getElementById('rpt-de').value;
 
   var data = RAW.slice();
-  if (sprint) data = data.filter(function(x){return x.Sprint===sprint;});
-  if (ds) data = data.filter(function(x){return x['Closed Date']&&x['Closed Date']>=ds;});
-  if (de) data = data.filter(function(x){return x['Closed Date']&&x['Closed Date']<=de;});
+  if (sp) data = data.filter(function(x) { return x.Sprint === sp; });
+  if (ds) data = data.filter(function(x) { return x['Closed Date'] && x['Closed Date'] >= ds; });
+  if (de) data = data.filter(function(x) { return x['Closed Date'] && x['Closed Date'] <= de; });
 
-  var closed  = data.filter(function(d){return d.State==='Closed';});
-  var stories = closed.filter(function(d){return d['Work Item Type']==='User Story';});
-  var bugs    = closed.filter(function(d){return d['Work Item Type']==='Bug';});
-  var deploys = rptExtractDeploys(data);
-  var projSet = {}; data.forEach(function(d){projSet[d.Project]=1;}); var projects=Object.keys(projSet).length;
+  var cl  = data.filter(function(d) { return d.State === 'Closed'; });
+  var st  = cl.filter(function(d) { return d['Work Item Type'] === 'User Story'; });
+  var bu  = cl.filter(function(d) { return d['Work Item Type'] === 'Bug'; });
 
-  var crm      = data.filter(function(d){return d.Project==='CRM Insights';});
-  var crmCl    = crm.filter(function(d){return d.State==='Closed';});
-  var crmBugs  = crm.filter(function(d){return d['Work Item Type']==='Bug';});
-  var crmBugsC = crmBugs.filter(function(d){return d.State==='Closed';});
-  var mttr     = rptCalcMTTR(crm);
-  var crmSP    = crmCl.reduce(function(s,d){return s+(d['Story Points']||0);},0);
-  var crmTSP   = crm.reduce(function(s,d){return s+(d['Story Points']||0);},0);
-  var bPct     = crmBugs.length ? Math.round(crmBugsC.length/crmBugs.length*100) : 0;
+  // Deploy count
+  var depMap = {};
+  data.forEach(function(d) {
+    var m = (d.Tags||'').match(/Deployed\s+[\d/]+/gi);
+    if (m) m.forEach(function(x){ depMap[x]=1; });
+  });
+  var deps = Object.keys(depMap).length;
 
-  var topItems = crmCl.slice().sort(function(a,b){return(b['Story Points']||0)-(a['Story Points']||0);}).slice(0,10);
-  var ins = rptBuildInsights(data);
+  // Projects
+  var prMap = {};
+  data.forEach(function(d){ prMap[d.Project]=1; });
+  var projs = Object.keys(prMap).length;
 
-  var cfg = sprint && SPRINT_CONFIG[sprint] ? SPRINT_CONFIG[sprint] : null;
-  var today = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
-  var titleTxt = 'Delivery Report \u2014 '+(sprint?'Sprint '+sprint:'All Sprints');
-  var sub = cfg ? cfg.start+' \u2192 '+cfg.end : (ds||de) ? (ds||'...')+' \u2192 '+(de||'...') : 'Full History';
-  var aStories = data.filter(function(d){return d['Work Item Type']==='User Story';}).length;
-  var aBugs    = data.filter(function(d){return d['Work Item Type']==='Bug';}).length;
+  // CRM
+  var crm  = data.filter(function(d){ return d.Project==='CRM Insights'; });
+  var crmC = crm.filter(function(d){ return d.State==='Closed'; });
+  var crmB = crm.filter(function(d){ return d['Work Item Type']==='Bug'; });
+  var crmBC= crmB.filter(function(d){ return d.State==='Closed'; });
+  var crmSP= crmC.reduce(function(s,d){ return s+(d['Story Points']||0); },0);
+  var crmTS= crm.reduce(function(s,d){ return s+(d['Story Points']||0); },0);
+  var bPct = crmB.length ? Math.round(crmBC.length/crmB.length*100) : 0;
 
-  var itemRows = topItems.map(function(item){
-    var isBug = item['Work Item Type']==='Bug';
-    var ct = item.Title.replace(/^Functions\.[A-Za-z.]+ \| /,'').replace(/^SRS \| /,'');
-    if (ct.length>62) ct = ct.slice(0,60)+'...';
+  // MTTR
+  var mttr = (function(){
+    var bugs = crm.filter(function(d){ return d.State==='Closed'&&d['Work Item Type']==='Bug'&&d['Closed Date']&&d['Created Date']; });
+    if (!bugs.length) return 'N/A';
+    var vals = bugs.map(function(d){
+      var a=new Date(d['Created Date']+'T00:00:00'), b=new Date(d['Closed Date']+'T00:00:00'), n=0, c=new Date(a);
+      while(c<=b){ if(c.getDay()&&c.getDay()<6) n++; c.setDate(c.getDate()+1); }
+      return Math.max(1,n)*8;
+    });
+    var avg=vals.reduce(function(a,b){return a+b;},0)/vals.length;
+    return avg<8 ? avg.toFixed(1)+'h' : Math.floor(avg/8)+'d';
+  })();
+
+  // Insights
+  var ins = (function(){
+    var pMap = {};
+    crmC.forEach(function(d){ var m=d.Title.match(/for ([A-Z][A-Z0-9]+)/); if(m) pMap[m[1]]=1; });
+    var pl = Object.keys(pMap);
+    var cu=[], te=[], op=[];
+    if (pl.length) cu.push('Supported '+pl.length+' CRM partner'+(pl.length>1?'s':'')+': '+pl.slice(0,6).join(', ')+'.');
+    var of=cl.filter(function(d){ return d.Title.toLowerCase().indexOf('order')!==-1&&d['Work Item Type']==='Bug'; });
+    if (of.length) cu.push('Resolved '+of.length+' order bug'+(of.length>1?'s':'')+', improving submission reliability.');
+    var wh=cl.filter(function(d){ return d.Title.toLowerCase().indexOf('webhook')!==-1; });
+    if (wh.length) cu.push('Configured '+wh.length+' webhook'+(wh.length>1?'s':'')+' for real-time event delivery.');
+    if (cu.length<3) cu.push('Customer validate API enhancements improve partner authentication and error reporting.');
+    var ni=data.filter(function(d){ return d.Title.indexOf('.NET 10')!==-1; });
+    if (ni.length) te.push('.NET 10 migration: '+ni.filter(function(d){return d.State==='Closed';}).length+'/'+ni.length+' services done.');
+    var tp=cl.filter(function(d){ return d.Title.toLowerCase().indexOf('temporal')!==-1; });
+    if (tp.length) te.push('Temporal infrastructure: '+tp.length+' item'+(tp.length>1?'s':'')+' completed.');
+    if (deps) te.push(deps+' deployment event'+(deps>1?'s':'')+' across STG/PROD.');
+    if (te.length<3) te.push('Shared Azure Artifacts store configured for GitHub repositories.');
+    var bc=cl.filter(function(d){ return d['Work Item Type']==='Bug'; });
+    if (bc.length) op.push(bc.length+' bug'+(bc.length>1?'s':'')+' resolved this period.');
+    var ic=data.filter(function(d){ return (d.Tags||'').indexOf('INC')!==-1; });
+    if (ic.length) op.push(ic.filter(function(d){return d.State==='Closed';}).length+'/'+ic.length+' incident items resolved.');
+    var cr=cl.filter(function(d){ return d.Title.toLowerCase().indexOf('credentials')!==-1; });
+    if (cr.length) op.push(cr.length+' PROD credential'+(cr.length>1?'s':'')+' provisioned.');
+    if (op.length<3) op.push('Burnup and velocity tracking provide real-time delivery transparency.');
+    return {cu:cu, te:te, op:op};
+  })();
+
+  // Top CRM items
+  var top = crmC.slice().sort(function(a,b){ return (b['Story Points']||0)-(a['Story Points']||0); }).slice(0,10);
+  var rows = top.map(function(item){
+    var bug = item['Work Item Type']==='Bug';
+    var t = item.Title.replace(/^Functions\.[A-Za-z.]+ \| /,'').replace(/^SRS \| /,'');
+    if (t.length>62) t=t.slice(0,60)+'...';
     return '<tr style="border-bottom:1px solid #f0f9f9;">'
       +'<td style="padding:5px 8px;font-size:10px;color:#9ab8b7;">#'+item.ID+'</td>'
-      +'<td style="padding:5px 8px;font-size:12px;color:#1c2b33;">'+ct+'</td>'
-      +'<td style="padding:5px 8px;text-align:center;"><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:'+(isBug?'rgba(239,83,80,0.10)':'rgba(8,189,186,0.10)')+';color:'+(isBug?'#c62828':'#00695c')+';">'+item['Work Item Type']+'</span></td>'
+      +'<td style="padding:5px 8px;font-size:12px;color:#1c2b33;">'+t+'</td>'
+      +'<td style="padding:5px 8px;text-align:center;"><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:'+(bug?'rgba(239,83,80,.10)':'rgba(8,189,186,.10)')+';color:'+(bug?'#c62828':'#00695c')+';">'+item['Work Item Type']+'</span></td>'
       +'<td style="padding:5px 8px;font-size:11px;color:#9ab8b7;text-align:right;">'+(item['Story Points']||0)+' SP</td>'
       +'<td style="padding:5px 8px;font-size:11px;color:#9ab8b7;text-align:right;">'+(item['Closed Date']||'')+'</td>'
       +'</tr>';
   }).join('');
 
+  function k(l,v,d,a){
+    return '<div style="background:#f8fffe;border:1px solid #d8eeed;border-top:3px solid '+a+';border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#6b8f8e;margin-bottom:3px;">'+l+'</div>'
+      +'<div style="font-size:22px;font-weight:700;color:'+a+';line-height:1;">'+v+'</div>'
+      +'<div style="font-size:11px;color:#9ab8b7;margin-top:3px;">'+d+'</div></div>';
+  }
+  function h(l,a){
+    return '<div style="display:flex;align-items:center;gap:8px;margin:20px 0 10px;">'
+      +'<div style="width:4px;height:16px;background:'+a+';border-radius:2px;"></div>'
+      +'<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:'+a+';">'+l+'</div></div>';
+  }
+  function col(t,items,a){
+    return '<div style="background:#f8fffe;border:1px solid #d8eeed;border-radius:8px;padding:14px;">'
+      +'<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:'+a+';margin-bottom:10px;">'+t+'</div>'
+      +items.map(function(i){ return '<div style="display:flex;gap:7px;margin-bottom:6px;"><span style="color:'+a+';font-weight:700;flex-shrink:0;">—</span><span style="font-size:12px;color:#2a3f45;line-height:1.45;">'+i+'</span></div>'; }).join('')
+      +'</div>';
+  }
+
+  var cfg = sp && SPRINT_CONFIG[sp] ? SPRINT_CONFIG[sp] : null;
+  var today = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  var title = 'Delivery Report — '+(sp?'Sprint '+sp:'All Sprints');
+  var sub = cfg ? cfg.start+' → '+cfg.end : (ds||de)?(ds||'...')+' → '+(de||'...'):'Full History';
+  var aSt = data.filter(function(d){return d['Work Item Type']==='User Story';}).length;
+  var aBu = data.filter(function(d){return d['Work Item Type']==='Bug';}).length;
+
   var html =
     '<div style="background:linear-gradient(135deg,#062028,#0a3d4a);border-radius:10px;padding:22px 24px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:flex-start;">'
-    +'<div>'
-    +'<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:4px;">The Integration Team</div>'
-    +'<div style="font-size:20px;font-weight:700;color:#fff;">'+titleTxt+'</div>'
-    +'<div style="font-size:12px;color:rgba(255,255,255,0.55);margin-top:3px;">'+sub+'</div>'
-    +'</div>'
-    +'<div style="text-align:right;">'
-    +'<div style="font-size:10px;color:rgba(255,255,255,0.4);">Generated</div>'
-    +'<div style="font-size:12px;font-weight:600;color:rgba(8,189,186,0.85);">'+today+'</div>'
-    +'</div></div>'
+    +'<div><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);margin-bottom:4px;">The Integration Team</div>'
+    +'<div style="font-size:20px;font-weight:700;color:#fff;">'+title+'</div>'
+    +'<div style="font-size:12px;color:rgba(255,255,255,.55);margin-top:3px;">'+sub+'</div></div>'
+    +'<div style="text-align:right;"><div style="font-size:10px;color:rgba(255,255,255,.4);">Generated</div>'
+    +'<div style="font-size:12px;font-weight:600;color:#4dd0ce;">'+today+'</div></div></div>'
 
-    +rptSecHead('Delivery Overview','#08bdba')
+    +h('Delivery Overview','#08bdba')
     +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:4px;">'
-    +rptKpi('User Stories Completed',stories.length,'of '+aStories+' assigned','#08bdba')
-    +rptKpi('Bugs Completed',bugs.length,'of '+aBugs+' in scope','#00897b')
-    +rptKpi('Releases / Deploys',deploys,'Deployed tags in items','#0097a7')
-    +rptKpi('Active Projects',projects,'Distinct projects','#00acc1')
+    +k('User Stories Completed',st.length,'of '+aSt+' assigned','#08bdba')
+    +k('Bugs Completed',bu.length,'of '+aBu+' in scope','#00897b')
+    +k('Releases / Deploys',deps,'Deployed tags in items','#0097a7')
+    +k('Active Projects',projs,'Distinct projects','#00acc1')
     +'</div>'
 
-    +rptSecHead('CRM Insights','#00897b')
+    +h('CRM Insights','#00897b')
     +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;">'
-    +rptKpi('CRM Bugs Resolved',crmBugsC.length,'of '+crmBugs.length+' bugs ('+bPct+'%)','#00897b')
-    +rptKpi('CRM Items Closed',crmCl.length,'of '+crm.length+' total','#08bdba')
-    +rptKpi('CRM Story Points',crmSP,'of '+crmTSP+' SP','#0097a7')
-    +rptKpi('MTTR (Bugs)',mttr,'Mean time to resolve','#00acc1')
+    +k('CRM Bugs Resolved',crmBC.length,'of '+crmB.length+' bugs ('+bPct+'%)','#00897b')
+    +k('CRM Items Closed',crmC.length,'of '+crm.length+' total','#08bdba')
+    +k('CRM Story Points',crmSP,'of '+crmTS+' SP','#0097a7')
+    +k('MTTR (Bugs)',mttr,'Business hours avg','#00acc1')
     +'</div>'
-    +'<div style="background:#fff;border:1px solid #d8eeed;border-radius:8px;padding:14px;margin-bottom:4px;">'
-    +'<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:#00695c;margin-bottom:10px;">Key CRM Work Items</div>'
+    +'<div style="background:#f8fffe;border:1px solid #d8eeed;border-radius:8px;padding:14px;margin-bottom:4px;">'
+    +'<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#00695c;margin-bottom:10px;">Key CRM Work Items</div>'
     +'<table style="width:100%;border-collapse:collapse;">'
     +'<thead><tr style="border-bottom:2px solid #e0f4f3;">'
-    +'<th style="padding:6px 8px;font-size:9px;font-weight:700;text-transform:uppercase;color:#00695c;text-align:left;width:55px;">ID</th>'
-    +'<th style="padding:6px 8px;font-size:9px;font-weight:700;text-transform:uppercase;color:#00695c;text-align:left;">Title</th>'
-    +'<th style="padding:6px 8px;font-size:9px;font-weight:700;text-transform:uppercase;color:#00695c;text-align:center;width:90px;">Type</th>'
-    +'<th style="padding:6px 8px;font-size:9px;font-weight:700;text-transform:uppercase;color:#00695c;text-align:right;width:50px;">SP</th>'
-    +'<th style="padding:6px 8px;font-size:9px;font-weight:700;text-transform:uppercase;color:#00695c;text-align:right;width:90px;">Closed</th>'
-    +'</tr></thead>'
-    +'<tbody>'+(itemRows||'<tr><td colspan="5" style="padding:12px;color:#9ab8b7;font-size:12px;">No CRM items for this range.</td></tr>')+'</tbody>'
-    +'</table></div>'
+    +'<th style="padding:5px 8px;font-size:9px;font-weight:700;text-transform:uppercase;color:#00695c;width:55px;">ID</th>'
+    +'<th style="padding:5px 8px;font-size:9px;font-weight:700;text-transform:uppercase;color:#00695c;">Title</th>'
+    +'<th style="padding:5px 8px;font-size:9px;font-weight:700;text-transform:uppercase;color:#00695c;text-align:center;width:90px;">Type</th>'
+    +'<th style="padding:5px 8px;font-size:9px;font-weight:700;text-transform:uppercase;color:#00695c;text-align:right;width:50px;">SP</th>'
+    +'<th style="padding:5px 8px;font-size:9px;font-weight:700;text-transform:uppercase;color:#00695c;text-align:right;width:90px;">Closed</th>'
+    +'</tr></thead><tbody>'+(rows||'<tr><td colspan="5" style="padding:12px;color:#9ab8b7;">No CRM items.</td></tr>')+'</tbody></table></div>'
 
-    +rptSecHead('Key Improvements &amp; Enhancements','#0097a7')
+    +h('Key Improvements &amp; Enhancements','#0097a7')
     +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">'
-    +rptInsightCol('Customer-Focused',ins.customer,'#08bdba')
-    +rptInsightCol('Technology-Focused',ins.tech,'#00897b')
-    +rptInsightCol('Operations-Focused',ins.ops,'#0097a7')
+    +col('Customer-Focused',ins.cu,'#08bdba')
+    +col('Technology-Focused',ins.te,'#00897b')
+    +col('Operations-Focused',ins.op,'#0097a7')
     +'</div>'
+    +'<div style="margin-top:20px;padding-top:14px;border-top:1px solid #d8eeed;display:flex;justify-content:space-between;">'
+    +'<div style="font-size:10px;color:#b2dfdb;">The Integration Team · Capmation · '+today+'</div>'
+    +'<div style="font-size:10px;color:#b2dfdb;">Confidential — Internal Use Only</div></div>';
 
-    +'<div style="margin-top:24px;padding-top:14px;border-top:1px solid #d8eeed;display:flex;justify-content:space-between;">'
-    +'<div style="font-size:10px;color:#b2dfdb;">The Integration Team \u00b7 Capmation \u00b7 '+today+'</div>'
-    +'<div style="font-size:10px;color:#b2dfdb;">Confidential \u2014 Internal Use Only</div>'
-    +'</div>';
-
-  document.getElementById('rpt-placeholder').style.display = 'none';
-  document.getElementById('rpt-content').style.display = 'block';
-  document.getElementById('rpt-content').innerHTML = html;
-  document.getElementById('rpt-print-btn').style.display = 'inline-block';
-  document.getElementById('rpt-scroll').scrollTop = 0;
+  document.getElementById('rpt-out').innerHTML = html;
+  document.getElementById('rpt-pdf-btn').style.display = 'inline-block';
 }
 
-function printReport() {
-  var content = document.getElementById('rpt-content').innerHTML;
-  var w = window.open('','_blank','width=880,height=750,scrollbars=yes');
-  if (!w) { alert('Please allow popups to print.'); return; }
-  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    +'<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">'
-    +'<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:DM Sans,sans-serif;background:#f0f9f9;padding:28px 32px;}table{width:100%;border-collapse:collapse;}@media print{body{background:#fff;}@page{size:A4;margin:12mm;}}</style>'
-    +'</head><body>'+content
-    +'<div style="margin-top:20px;"><button onclick="window.print()" style="padding:8px 20px;background:#0288d1;color:#fff;border:none;border-radius:20px;cursor:pointer;font-family:DM Sans,sans-serif;font-size:13px;">Print / Save PDF</button></div>'
-    +'</body></html>');
-  w.document.close();
+function copyReportText() {
+  var out = document.getElementById('rpt-out');
+  if (!out || !out.innerHTML) { alert('Generate a report first.'); return; }
+
+  // Build clean plain text from the live report data
+  var lines = [];
+  var btn = document.getElementById('rpt-pdf-btn');
+
+  // Walk every text node and table to produce readable output
+  function walk(el, depth) {
+    if (!el) return;
+    var tag = (el.tagName || '').toLowerCase();
+
+    // Skip hidden/button elements
+    if (tag === 'button') return;
+
+    if (tag === 'table') {
+      var rows = el.querySelectorAll('tr');
+      rows.forEach(function(row) {
+        var cells = row.querySelectorAll('th, td');
+        var rowTxt = [];
+        cells.forEach(function(cell) { rowTxt.push(cell.textContent.trim()); });
+        if (rowTxt.some(function(x){return x;})) lines.push('  ' + rowTxt.join('  |  '));
+      });
+      return;
+    }
+
+    // Section headers (the accent-bar divs)
+    if (tag === 'div' && el.style && el.style.textTransform === 'uppercase' && depth < 4) {
+      var txt = el.textContent.trim();
+      if (txt && txt.length < 60) {
+        lines.push('');
+        lines.push(txt.toUpperCase());
+        lines.push('-'.repeat(txt.length));
+        return;
+      }
+    }
+
+    // KPI cards
+    if (tag === 'div' && el.style && el.style.borderTop && el.style.borderTop.indexOf('3px') !== -1) {
+      var label = '', value = '', desc = '';
+      var children = el.children;
+      if (children[0]) label = children[0].textContent.trim();
+      if (children[1]) value = children[1].textContent.trim();
+      if (children[2]) desc  = children[2].textContent.trim();
+      if (label && value) lines.push('  ' + label + ': ' + value + (desc ? ' (' + desc + ')' : ''));
+      return;
+    }
+
+    // Insight bullet rows
+    if (tag === 'div' && el.style && el.style.display === 'flex' && el.children.length === 2) {
+      var bullet = el.children[0].textContent.trim();
+      var text   = el.children[1].textContent.trim();
+      if (bullet === '\u2014' && text) { lines.push('  - ' + text); return; }
+    }
+
+    // Recurse
+    for (var i = 0; i < el.childNodes.length; i++) {
+      var node = el.childNodes[i];
+      if (node.nodeType === 3) { // text node
+        var t = node.textContent.trim();
+        if (t && t.length > 1 && t !== '\u2014') { /* handled above */ }
+      } else if (node.nodeType === 1) {
+        walk(node, depth + 1);
+      }
+    }
+  }
+
+  // Build text by extracting from the rendered HTML directly
+  var tmp = document.createElement('div');
+  tmp.innerHTML = out.innerHTML;
+
+  // Simple approach: get all text with structure preserved
+  var text = [];
+  text.push('THE INTEGRATION TEAM');
+  text.push('='.repeat(40));
+  text.push('');
+
+  // Get title/subtitle from header block
+  var headerDiv = tmp.querySelector('div[style*="linear-gradient"]');
+  if (headerDiv) {
+    headerDiv.querySelectorAll('div').forEach(function(d) {
+      var t = d.textContent.trim();
+      if (t && t.length > 2 && t.length < 80) text.push(t);
+    });
+    text.push('');
+  }
+
+  // Section heads
+  tmp.querySelectorAll('div').forEach(function(div) {
+    var st = div.getAttribute('style') || '';
+    // Section header line (accent bar + label)
+    if (st.indexOf('width:4px') !== -1) {
+      var next = div.nextElementSibling;
+      if (next) {
+        text.push('');
+        text.push(next.textContent.trim().toUpperCase());
+        text.push('-'.repeat(Math.min(next.textContent.trim().length, 40)));
+      }
+    }
+    // KPI card
+    if (st.indexOf('border-top:3px') !== -1 || st.indexOf('border-top: 3px') !== -1) {
+      var kids = div.children;
+      if (kids.length >= 2) {
+        var lbl = kids[0] ? kids[0].textContent.trim() : '';
+        var val = kids[1] ? kids[1].textContent.trim() : '';
+        var dsc = kids[2] ? kids[2].textContent.trim() : '';
+        if (lbl && val) text.push('  ' + lbl + ': ' + val + (dsc ? ' (' + dsc + ')' : ''));
+      }
+    }
+    // Insight bullet
+    if (st.indexOf('display:flex') !== -1 || st.indexOf('display: flex') !== -1) {
+      if (div.children.length === 2) {
+        var sp = div.children[0].textContent.trim();
+        var tx = div.children[1].textContent.trim();
+        if (sp === '\u2014' && tx) text.push('  - ' + tx);
+      }
+    }
+  });
+
+  // Table rows
+  tmp.querySelectorAll('tr').forEach(function(row) {
+    var cells = row.querySelectorAll('th,td');
+    var parts = [];
+    cells.forEach(function(c) { parts.push(c.textContent.trim()); });
+    if (parts.some(function(x){return x;})) text.push('  ' + parts.join(' | '));
+  });
+
+  text.push('');
+  text.push('Confidential - Internal Use Only');
+  text.push('Generated: ' + new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}));
+
+  var plain = text.join('\n');
+
+  // Copy to clipboard
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(plain).then(function() {
+      btn.textContent = 'Copied!';
+      btn.style.background = '#00695c';
+      setTimeout(function() { btn.textContent = 'Copy as Plain Text'; btn.style.background = '#00897b'; }, 2000);
+    }).catch(function() { fallbackCopy(plain, btn); });
+  } else {
+    fallbackCopy(plain, btn);
+  }
 }
 
+function fallbackCopy(text, btn) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try {
+    document.execCommand('copy');
+    btn.textContent = 'Copied!';
+    btn.style.background = '#00695c';
+    setTimeout(function() { btn.textContent = 'Copy as Plain Text'; btn.style.background = '#00897b'; }, 2000);
+  } catch(e) {
+    alert('Could not copy. Please select and copy the report text manually.');
+  }
+  document.body.removeChild(ta);
+}
+
+
+// Initial render
+applyFilters();
 </script>
 
-<!-- REPORT GENERATOR PANEL -->
-<div id="rpt-overlay" onclick="closeReportPanel()" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:999;opacity:0;pointer-events:none;transition:opacity 0.28s ease;"></div>
-
-<div id="rpt-panel" style="display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;width:min(780px,95vw);background:#fff;z-index:1000;box-shadow:-8px 0 40px rgba(0,0,0,0.22);font-family:'DM Sans',sans-serif;overflow:hidden;transform:translateX(100%);transition:transform 0.28s ease;visibility:hidden;">
-  <div style="background:linear-gradient(135deg,#062028,#0a3d4a);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
-    <div>
-      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:3px;">The Integration Team</div>
-      <div style="font-size:18px;font-weight:700;color:#fff;">Report Generator</div>
-    </div>
-    <button onclick="closeReportPanel()" style="background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.7);font-size:20px;width:36px;height:36px;border-radius:50%;cursor:pointer;line-height:1;">&#x2715;</button>
-  </div>
-  <div style="padding:16px 24px;background:#f0f9f9;border-bottom:1px solid #d8eeed;flex-shrink:0;">
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#00695c;margin-bottom:8px;">Sprint Filter</div>
-    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-      <button id="rpt-pill-5" onclick="rptTogglePill('5')" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer;border:2px solid #b2dfdb;background:#fff;color:#00695c;">Sprint 5</button>
-      <button id="rpt-pill-6" onclick="rptTogglePill('6')" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:6px 16px;border-radius:20px;cursor:pointer;border:2px solid #08bdba;background:#08bdba;color:#fff;">Sprint 6</button>
-    </div>
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#00695c;">Date Range</span>
-      <input type="date" id="rpt-date-start" style="font-family:'DM Sans',sans-serif;font-size:12px;color:#1c2b33;background:#fff;border:1px solid #b2dfdb;border-radius:6px;padding:5px 10px;outline:none;"/>
-      <span style="color:#9ab8b7;font-size:12px;">to</span>
-      <input type="date" id="rpt-date-end" style="font-family:'DM Sans',sans-serif;font-size:12px;color:#1c2b33;background:#fff;border:1px solid #b2dfdb;border-radius:6px;padding:5px 10px;outline:none;"/>
-      <button onclick="generateReport()" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;padding:7px 20px;background:#0288d1;color:#fff;border:none;border-radius:20px;cursor:pointer;">Generate Report</button>
-      <button onclick="printReport()" id="rpt-print-btn" style="font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:7px 14px;background:#00897b;color:#fff;border:none;border-radius:20px;cursor:pointer;display:none;">Print / PDF</button>
-    </div>
-  </div>
-  <div id="rpt-scroll" style="flex:1;overflow-y:auto;padding:20px 24px;">
-    <div id="rpt-placeholder" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:280px;text-align:center;">
-      <div style="font-size:36px;margin-bottom:12px;color:#b2dfdb;">&#9656;</div>
-      <div style="font-size:14px;font-weight:600;color:#5c7580;margin-bottom:6px;">Select a sprint or date range</div>
-      <div style="font-size:12px;color:#9ab8b7;">then click <strong>Generate Report</strong></div>
-    </div>
-    <div id="rpt-content" style="display:none;"></div>
-  </div>
-</div>
-
-
 </body>
-</html>
