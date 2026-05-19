@@ -398,7 +398,7 @@ body{font-family:'Outfit',sans-serif;background:var(--color-bg);color:var(--tx1)
   <div class="tb-right">
     <div class="tb-chip" id="sprint-active-chip"><span class="live"></span>Sprint 7 — Active</div>
     <div class="tb-chip dates" id="sprint-dates-chip">May 11 – May 29, 2026</div>
-    <div class="tb-chip deploy"><span id="deploy-chip-text">Deploy May 29</span></div>
+    <div class="tb-chip deploy"><span id="deploy-chip-text">Deploy May 19</span></div>
     <button class="btn-report" onclick="openReportModal()">
       <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1.5" y="1.5" width="10" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M4 5h5M4 7h5M4 9h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
       Generate Report
@@ -442,7 +442,7 @@ body{font-family:'Outfit',sans-serif;background:var(--color-bg);color:var(--tx1)
       <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(15,163,191,.15);border:1px solid rgba(15,163,191,.3);border-radius:99px;padding:5px 14px;">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="2" width="10" height="9" rx="1.5" stroke="rgba(109,220,233,.8)" stroke-width="1.2"/><path d="M1 5h10" stroke="rgba(109,220,233,.8)" stroke-width="1.2"/><path d="M4 1v2M8 1v2" stroke="rgba(109,220,233,.8)" stroke-width="1.2" stroke-linecap="round"/></svg>
         <span style="font-size:11px;font-weight:600;color:var(--t300);">Next Release &amp; Deploy</span>
-        <span style="font-size:11px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.1);padding:2px 10px;border-radius:99px;" id="hero-deploy-date">May 12, 2026</span>
+        <span style="font-size:11px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.1);padding:2px 10px;border-radius:99px;" id="hero-deploy-date">May 19, 2026</span>
       </div>
     </div>
   </div>
@@ -492,7 +492,7 @@ body{font-family:'Outfit',sans-serif;background:var(--color-bg);color:var(--tx1)
       <div class="card" style="overflow:visible;">
         <div class="card-head">
           <span class="card-title" style="color:var(--b700);">Ready for Release</span>
-          <span style="background:var(--b600);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:99px;" id="rfr-date-badge">May 12</span>
+          <span style="background:var(--b600);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:99px;" id="rfr-date-badge">May 19</span>
         </div>
         <div class="card-body">
           <div class="rfr-top">
@@ -521,7 +521,7 @@ body{font-family:'Outfit',sans-serif;background:var(--color-bg);color:var(--tx1)
         <div class="card-head">
           <div class="biz-head">
             <span class="card-title">Business Projects Activity</span>
-            <span style="background:var(--b600);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:99px;">SPRINT 5</span>
+            <span style="background:var(--b600);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:99px;">SPRINT 7</span>
             <div class="mode-toggle" style="margin-left:4px;">
               <button class="mode-btn on" id="biz-toggle-count" onclick="setBizMode('count')">Items</button>
               <button class="mode-btn" id="biz-toggle-sp" onclick="setBizMode('sp')">Story Points</button>
@@ -554,7 +554,7 @@ body{font-family:'Outfit',sans-serif;background:var(--color-bg);color:var(--tx1)
           <div style="background:var(--color-surface2);border:1px solid var(--color-border);border-radius:var(--r-md);padding:12px 16px;">
             <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tx4);margin-bottom:4px;">Days Remaining</div>
             <div style="font-size:28px;font-weight:800;color:var(--success);font-family:'JetBrains Mono',monospace;line-height:1;" id="bu-remaining">–</div>
-            <div style="font-size:10px;color:var(--tx3);" id="bu-remaining-sub">until May 12</div>
+            <div style="font-size:10px;color:var(--tx3);" id="bu-remaining-sub">until May 19</div>
           </div>
           <div style="background:var(--color-surface2);border:1px solid var(--color-border);border-radius:var(--r-md);padding:12px 16px;">
             <div style="font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tx4);margin-bottom:4px;">Avg SP / Day</div>
@@ -1844,9 +1844,7 @@ function setBizMode(mode) {
 
 function renderBizProjectChart(data) {
   window._bizData = data;
-  const ALL_PROJECTS = window._activeSprint===6
-    ?['Quickbooks HLSG','Quickbooks SRS','ProjectMapIt','Quotes','Procard','Performance Migration','Heritage HIPS','.NET 10 Upgrade','SRS Support','Infrastructure','HLSG Support','Remediations']
-    :['Quickbooks','ProjectMapIt','PropertyReports','Quotes','Chili','Procard','Remediations'];
+  const ALL_PROJECTS = ['Heritage HIPS','AutoMapper','Performance Migration','HLSG Support','Quickbooks HLSG','SRS Support','ProjectMapIt','Partners Credentials Rotation','.NET 10 Upgrade','Quickbooks SRS','Quotes','Procard','Infrastructure'];
   const STATUSES     = ['Closed','Ready for Release','UAT','In Development','In QA','Blocked','New','Other'];
 
   const STATUS_COLORS = {
@@ -1860,9 +1858,10 @@ function renderBizProjectChart(data) {
     'Other':             '#e2e8f0',
   };
 
-  const isRemediation = d => /vulnerabilit|remediat|serverless.vuln/i.test(d.title);
-  const isBruno = d => /bruno/i.test(d.title) || d.project === 'Bruno';
-  const enriched = data.map(d => ({ ...d, project: isRemediation(d) ? 'Remediations' : isBruno(d) ? 'Bruno' : d.project }));
+  const isRealINC = d => (d.tags||'').split(';').map(t=>t.trim()).some(t=>t==='INC'||/^INC\d+$/.test(t));
+  const isRemediation = d => /vulnerabilit|remediat|serverless.vuln/i.test(d.title||'');
+  // Exclude INC and vuln/remediation items — only show project work
+  const enriched = data.filter(d => !isRealINC(d) && !isRemediation(d)).map(d => ({ ...d }));
 
   // Build per-project totals for chips
   const projTotals = {};
@@ -2729,10 +2728,10 @@ function updateSprintChip() {
   const hd = document.getElementById('hero-deploy-date');
   const rfr = document.getElementById('rfr-date-badge');
   if (c)   c.innerHTML = '<span class="live"></span>Sprint ' + sp + (sp===7 ? ' — Active' : ' — Closed ✓');
-  if (d)   d.textContent  = sp===7 ? 'Deploy May 29' : sp===6 ? 'Deployed May 12' : 'Deployed Apr 21';
+  if (d)   d.textContent  = sp===7 ? 'Deploy May 19' : sp===6 ? 'Deployed May 12' : 'Deployed Apr 21';
   if (dt)  dt.textContent = sp===7 ? 'May 11 – May 29, 2026' : sp===6 ? 'Apr 21 – May 12, 2026' : 'Mar 30 – Apr 17, 2026';
-  if (hd)  hd.textContent = sp===7 ? 'May 29, 2026' : sp===6 ? 'May 12, 2026' : 'Apr 21, 2026';
-  if (rfr) rfr.textContent = sp===7 ? 'May 29' : sp===6 ? 'May 12' : 'Apr 21';
+  if (hd)  hd.textContent = sp===7 ? 'May 19, 2026' : sp===6 ? 'May 12, 2026' : 'Apr 21, 2026';
+  if (rfr) rfr.textContent = sp===7 ? 'May 19' : sp===6 ? 'May 12' : 'Apr 21';
   const n1 = document.getElementById('vel-footer-note');
   const n2 = document.getElementById('vel-footer-note2');
   const lb = sp===7 ? 'Sprint 7 · May 11 – May 29, 2026' : sp===6 ? 'Sprint 6 · Apr 21 – May 12, 2026' : 'Sprint 5 · Mar 30 – Apr 17, 2026';
