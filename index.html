@@ -3801,6 +3801,33 @@ function resetDeliverySummary() {
   renderDeliverySummary();
 }
 
+
+// ── Portfolio Modal ───────────────────────────────────────────────────────
+function openPtdModal(){document.getElementById('ptd-modal').classList.add('open');}
+function closePtdModal(){document.getElementById('ptd-modal').classList.remove('open');}
+function ptdFilter(){
+  const proj  =document.getElementById('ptd-f-proj').value;
+  const owner =document.getElementById('ptd-f-owner').value;
+  const status=document.getElementById('ptd-f-status').value;
+  let visible=0;
+  document.querySelectorAll('.ptd-qs-row').forEach(r=>{
+    const show=(proj==='all'||r.dataset.name===proj)
+             &&(owner==='all'||r.dataset.owner===owner)
+             &&(status==='all'||r.dataset.status===status);
+    r.style.display=show?'flex':'none';
+    if(show)visible++;
+  });
+  document.querySelectorAll('.ptd-tl-row').forEach(r=>{
+    const show=(proj==='all'||r.dataset.name===proj)
+             &&(owner==='all'||r.dataset.owner===owner)
+             &&(status==='all'||r.dataset.status===status);
+    r.style.display=show?'':'none';
+  });
+  const badge=document.getElementById('ptd-filter-count');
+  if(badge)badge.textContent=(proj==='all'&&owner==='all'&&status==='all')
+    ?'All Projects':visible+' project'+(visible!==1?'s':'')+' shown';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePtdModal();});
 </script>ice-width,initial-scale=1.0">
 <title>The Integrators Team — Sprint 6</title>
 
